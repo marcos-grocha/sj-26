@@ -502,6 +502,30 @@ footer {
   border-top: 1px solid var(--border);
 }
 
+.visit-bubble {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 90;
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1.5px solid var(--accent);
+  color: var(--text);
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.visit-bubble:hover { opacity: 1 !important; }
+
 /* ── RESPONSIVE ── */
 @media (max-width: 480px) {
   .day-card {

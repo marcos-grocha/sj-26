@@ -271,3 +271,15 @@ const todayCard = document.querySelector(".day-card.today");
 if (todayCard) {
   setTimeout(() => todayCard.scrollIntoView({ behavior: "smooth", block: "center" }), 300);
 }
+
+// ── Contador de visitas ──
+const visitBubble = document.getElementById("visit-bubble");
+fetch("https://api.counterapi.dev/v1/sj26/visits/up")
+  .then(r => r.json())
+  .then(({ count }) => {
+    if (count == null) return;
+    visitBubble.textContent = count > 9999 ? "9k+" : count.toLocaleString("pt-BR");
+    visitBubble.style.opacity = "0.75";
+    visitBubble.style.pointerEvents = "auto";
+  })
+  .catch(() => {});
