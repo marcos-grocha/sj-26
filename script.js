@@ -185,6 +185,7 @@ document.getElementById("filterBar").addEventListener("click", e => {
 
 // ── Countdown ──
 const EVENT_START = new Date("2026-05-29T18:00:00");
+const pad = n => String(n).padStart(2, "0");
 
 function updateCountdown() {
   const now = new Date();
@@ -193,6 +194,7 @@ function updateCountdown() {
   if (diff <= 0) {
     document.getElementById("countdown").innerHTML =
       '<p style="color:var(--accent);font-weight:700;font-size:1rem;padding:0.5rem 0">O São João começou! 🎉</p>';
+    document.getElementById("countdown-compact").textContent = "Acontecendo agora!";
     return;
   }
 
@@ -201,15 +203,38 @@ function updateCountdown() {
   const m = Math.floor((diff % 3600000) / 60000);
   const s = Math.floor((diff % 60000) / 1000);
 
-  document.getElementById("cd-d").textContent = String(d).padStart(2, "0");
-  document.getElementById("cd-h").textContent = String(h).padStart(2, "0");
-  document.getElementById("cd-m").textContent = String(m).padStart(2, "0");
-  document.getElementById("cd-s").textContent = String(s).padStart(2, "0");
+  document.getElementById("cd-d").textContent = pad(d);
+  document.getElementById("cd-h").textContent = pad(h);
+  document.getElementById("cd-m").textContent = pad(m);
+  document.getElementById("cd-s").textContent = pad(s);
+  document.getElementById("countdown-compact").textContent =
+    `${pad(d)}d ${pad(h)}h ${pad(m)}m ${pad(s)}s`;
 }
 
 renderSchedule();
 updateCountdown();
 setInterval(updateCountdown, 1000);
+
+// ── Bandeirinhas ──
+const flagsContainer = document.getElementById("header-flags");
+for (let i = 0; i < 20; i++) {
+  const span = document.createElement("span");
+  span.className = "flag";
+  flagsContainer.appendChild(span);
+}
+
+// ── Header scroll collapse ──
+const siteHeader = document.getElementById("site-header");
+
+window.addEventListener("scroll", () => {
+  siteHeader.classList.toggle("scrolled", window.scrollY > 72);
+}, { passive: true });
+
+// ── Esconder crédito quando footer estiver visível ──
+const footerEl = document.querySelector("footer");
+new IntersectionObserver(entries => {
+  siteHeader.classList.toggle("footer-visible", entries[0].isIntersecting);
+}, { threshold: 0 }).observe(footerEl);
 
 // Auto-scroll to today
 const todayCard = document.querySelector(".day-card.today");
