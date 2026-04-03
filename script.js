@@ -1,7 +1,7 @@
 const WEEKS = [
   {
     id: 1,
-    title: "Semana 1 · O Abre-Alas",
+    title: "Semana 1 · Final de Maio",
     days: [
       { date: "2026-05-29", weekday: "Sex", month: "Maio", special: null,
         artists: ["Fogo na Saia", "Seu Desejo", 'Calcinha Preta "Atemporal"'],
