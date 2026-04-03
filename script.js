@@ -35,7 +35,7 @@ const WEEKS = [
         p360: "Alê Ferraz" },
       { date: "2026-06-05", weekday: "Sex", month: "Jun", special: null,
         artists: ["Geninho Batalha", "Jonas Esticado", "Iguinho e Lulinha", "Ávine Vinny"],
-        highlights: ["Ávine Vinny"],
+        highlights: ["Iguinho e Lulinha", "Jonas Esticado"],
         p360: "André Novaes" },
       { date: "2026-06-06", weekday: "Sáb", month: "Jun", special: null,
         artists: ["Zueirões do Forró", "Guilherme Dantas", "Duas Paixões", "Tarcísio do Acordeon"],
@@ -43,7 +43,7 @@ const WEEKS = [
         p360: "Dudu Moral" },
       { date: "2026-06-07", weekday: "Dom", month: "Jun", special: null,
         artists: ["Flor de Maracujá", "Dorgival Dantas", "Magníficos"],
-        highlights: ["Magníficos"],
+        highlights: ["Dorgival Dantas"],
         p360: "Elton Motta" },
     ]
   },
@@ -61,7 +61,7 @@ const WEEKS = [
         p360: "Alisson Lima" },
       { date: "2026-06-11", weekday: "Qui", month: "Jun", special: null,
         artists: ["Nineia Oliveira", "Samyra Show", "Simone Mendes"],
-        highlights: ["Simone Mendes"],
+        highlights: ["Samyra Show", "Simone Mendes"],
         p360: "Larissa Costa" },
       { date: "2026-06-12", weekday: "Sex", month: "Jun", special: "Dia dos Namorados",
         artists: ["Quarto de Milha", "Falamansa", "Zé Vaqueiro", "Gil Mendes"],
@@ -69,11 +69,12 @@ const WEEKS = [
         p360: "Netto Ventura" },
       { date: "2026-06-13", weekday: "Sáb", month: "Jun", special: "Santo Antônio",
         artists: ["Transmissão Jogo do Brasil", "Mastruz com Leite", "Raí Saia Rodada", "Nuzio Medeiros"],
-        highlights: ["Mastruz com Leite"],
+        highlights: ["Raí Saia Rodada"],
+        worldcupHighlights: ["Transmissão Jogo do Brasil"],
         p360: "Cartas de Tarô" },
       { date: "2026-06-14", weekday: "Dom", month: "Jun", special: null,
         artists: ["Erivaldo de Carira", "Batista Lima", "Zé Cantor"],
-        highlights: ["Zé Cantor"],
+        highlights: [],
         p360: "Raio da Silibrina" },
     ]
   },
@@ -87,7 +88,7 @@ const WEEKS = [
         p360: "Heitor Santos" },
       { date: "2026-06-17", weekday: "Qua", month: "Jun", special: null,
         artists: ["Ranniery Gomes", "Cavaleiros do Forró", "Limão com Mel"],
-        highlights: ["Limão com Mel"],
+        highlights: ["Cavaleiros do Forró", "Limão com Mel"],
         p360: "Vannessa Porto" },
       { date: "2026-06-18", weekday: "Qui", month: "Jun", special: null,
         artists: ["Ju Marques", "Solange Almeida", "Fernandinha"],
@@ -96,10 +97,11 @@ const WEEKS = [
       { date: "2026-06-19", weekday: "Sex", month: "Jun", special: null,
         artists: ["Luan Estilizado", "Transmissão Jogo do Brasil", "Luan Santana", "João Bosco e Vinícius"],
         highlights: ["Luan Santana"],
+        worldcupHighlights: ["Transmissão Jogo do Brasil"],
         p360: "Ygor Raniere" },
       { date: "2026-06-20", weekday: "Sáb", month: "Jun", special: null,
         artists: ["Maraisa Cantora", "Brasas do Forró", "Yasmin Sensação", "Filho do Piseiro"],
-        highlights: ["Filho do Piseiro"],
+        highlights: ["Yasmin Sensação", "Filho do Piseiro"],
         p360: "Lucas Castro" },
       { date: "2026-06-21", weekday: "Dom", month: "Jun", special: null,
         artists: ["Marcelo Balla", "Claudio Ney e Juliana", "Gusttavo Lima"],
@@ -118,6 +120,7 @@ const WEEKS = [
       { date: "2026-06-24", weekday: "Qua", month: "Jun", special: "Dia de São João",
         artists: ["Transmissão Jogo do Brasil", "Alcymar Monteiro", "Geraldo Azevedo", "Matheus e Kauan"],
         highlights: ["Geraldo Azevedo", "Matheus e Kauan"],
+        worldcupHighlights: ["Transmissão Jogo do Brasil"],
         p360: "Danielzinho Jr." },
       { date: "2026-06-25", weekday: "Qui", month: "Jun", special: null,
         artists: ["Liene Show", "Taty Girl", "Lauana Prado"],
@@ -125,7 +128,7 @@ const WEEKS = [
         p360: "Tatah Santana" },
       { date: "2026-06-26", weekday: "Sex", month: "Jun", special: null,
         artists: ["Danielzinho o Kaceteiro", "Eline Martins", "Diego e Victor Hugo", "Vitor Fernandes"],
-        highlights: ["Diego e Victor Hugo"],
+        highlights: ["Vitor Fernandes"],
         p360: "Brenno Mattos" },
       { date: "2026-06-27", weekday: "Sáb", month: "Jun", special: null,
         artists: ["Cuscuz com Leite", "Zezo", "Bruno e Marrone", "Klessinha"],
@@ -179,7 +182,7 @@ function renderSchedule() {
           ${day.special ? `<span class="day-badge">${day.special}</span>` : ""}
           <div class="day-artists">
             ${day.artists.map((a, i) =>
-              `<span class="artist-tag${i === day.artists.length - 1 ? " headline" : ""}${day.highlights && day.highlights.includes(a) ? " star" : ""}">${a}</span>`
+              `<span class="artist-tag${day.highlights && day.highlights.includes(a) ? " star" : ""}${day.worldcupHighlights && day.worldcupHighlights.includes(a) ? " brasil" : ""}">${a}</span>`
             ).join("")}
           </div>
           <div class="palco360">
@@ -220,7 +223,7 @@ function updateCountdown() {
 
   if (diff <= 0) {
     document.getElementById("countdown").innerHTML =
-      '<p style="color:var(--accent);font-weight:700;font-size:1rem;padding:0.5rem 0">O São João começou! 🎉</p>';
+      '<p style="color:var(--accent);font-weight:700;font-size:1rem;padding:0.5rem 0">O Arraiá do Povo começou! 🎉</p>';
     document.getElementById("countdown-compact").textContent = "Acontecendo agora!";
     return;
   }
