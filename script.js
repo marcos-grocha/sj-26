@@ -276,17 +276,59 @@ if (todayCard) {
   setTimeout(() => todayCard.scrollIntoView({ behavior: "smooth", block: "center" }), 300);
 }
 
-// ── Contador de visitas ──
+// ── Contador de visitas + toggle Instagram ──
 const visitBubble = document.getElementById("visit-bubble");
+const IG_CACHE = "sj26_ig_count";
+let visitText = "";
+let igMode = false;
+let igCount = parseInt(localStorage.getItem(IG_CACHE)) || 0;
+
 fetch("https://api.counterapi.dev/v1/sj26/visits/up")
   .then(r => r.json())
   .then(({ count }) => {
     if (count == null) return;
-    visitBubble.textContent = count > 9999 ? "9k+" : count.toLocaleString("pt-BR");
+    visitText = count > 9999 ? "9k+" : count.toLocaleString("pt-BR");
+    visitBubble.textContent = visitText;
+    visitBubble.title = "clique em mim";
     visitBubble.style.opacity = "0.75";
     visitBubble.style.pointerEvents = "auto";
   })
   .catch(() => {});
+
+visitBubble.addEventListener("click", () => {
+  visitBubble.classList.add("flip-out");
+  setTimeout(() => {
+    igMode = !igMode;
+    if (igMode) {
+      visitBubble.classList.add("instagram-mode");
+      visitBubble.title = "@ ·";
+      visitBubble.textContent = igCount.toLocaleString("pt-BR");
+    } else {
+      visitBubble.classList.remove("instagram-mode");
+      visitBubble.title = "clique em mim";
+      visitBubble.textContent = visitText;
+    }
+    visitBubble.classList.remove("flip-out");
+  }, 200);
+});
+
+// ── Rastrear cliques no Instagram (apenas cliques reais) ──
+function trackInstagramClick() {
+  fetch("https://api.counterapi.dev/v1/sj26/instagram/up", { keepalive: true })
+    .then(r => r.json())
+    .then(({ count }) => {
+      if (count == null) return;
+      igCount = count;
+      localStorage.setItem(IG_CACHE, igCount);
+      if (igMode) visitBubble.textContent = igCount.toLocaleString("pt-BR");
+    })
+    .catch(() => {});
+}
+
+// Todos os links <a> do Instagram (popup, header, rodapé)
+document.querySelectorAll('a[href*="instagram.com/marcosjrgm"]').forEach(link => {
+  link.addEventListener("click", trackInstagramClick);
+});
 
 // ── Pop-up de contato ──
 const CONTACT_KEY = "sj26_contact_dismissed";
@@ -297,6 +339,7 @@ const contactClose = document.getElementById("contact-popup-close");
 contactBubble.textContent = "📞";
 
 contactBubble.addEventListener("click", () => {
+  trackInstagramClick();
   window.open("https://www.instagram.com/marcosjrgm/", "_blank", "noopener,noreferrer");
 });
 
