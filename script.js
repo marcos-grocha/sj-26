@@ -283,3 +283,40 @@ fetch("https://api.counterapi.dev/v1/sj26/visits/up")
     visitBubble.style.pointerEvents = "auto";
   })
   .catch(() => {});
+
+// ── Pop-up de contato ──
+const CONTACT_KEY = "sj26_contact_dismissed";
+const contactPopup = document.getElementById("contact-popup");
+const contactBubble = document.getElementById("contact-bubble");
+const contactClose = document.getElementById("contact-popup-close");
+
+contactBubble.textContent = "📞";
+
+contactBubble.addEventListener("click", () => {
+  window.open("https://www.instagram.com/marcosjrgm/", "_blank", "noopener,noreferrer");
+});
+
+function showContactBubble() {
+  contactBubble.classList.add("visible");
+}
+
+function dismissPopup() {
+  contactPopup.classList.remove("visible");
+  contactPopup.classList.add("collapsing");
+  contactPopup.addEventListener("transitionend", () => {
+    contactPopup.style.display = "none";
+    showContactBubble();
+  }, { once: true });
+  localStorage.setItem(CONTACT_KEY, "1");
+}
+
+contactClose.addEventListener("click", dismissPopup);
+
+if (localStorage.getItem(CONTACT_KEY)) {
+  contactPopup.style.display = "none";
+  showContactBubble();
+} else {
+  setTimeout(() => {
+    contactPopup.classList.add("visible");
+  }, 1000);
+}

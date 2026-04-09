@@ -526,6 +526,90 @@ footer {
 
 .visit-bubble:hover { opacity: 1 !important; }
 
+/* ── BOLINHA DE CONTATO ── */
+.contact-bubble {
+  position: fixed;
+  bottom: 5.2rem;
+  right: 1.5rem;
+  z-index: 90;
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1.5px solid var(--accent);
+  color: var(--accent);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0);
+  transform-origin: bottom right;
+  transition: opacity 0.3s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+  line-height: 1;
+}
+.contact-bubble.visible {
+  opacity: 0.85;
+  transform: scale(1);
+  pointer-events: auto;
+}
+.contact-bubble:hover { opacity: 1 !important; }
+
+/* ── POP-UP DE CONTATO ── */
+.contact-popup {
+  position: fixed;
+  bottom: 5.2rem;
+  right: 1.5rem;
+  z-index: 100;
+  background: var(--surface);
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 0.75rem 2rem 0.75rem 1rem;
+  max-width: 220px;
+  opacity: 0;
+  transform: scale(0);
+  transform-origin: bottom right;
+  transition: opacity 0.35s, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+.contact-popup.visible {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+.contact-popup.collapsing {
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity 0.4s ease-in, transform 0.4s cubic-bezier(0.55, 0, 1, 0.45);
+}
+.contact-popup__text {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text);
+  line-height: 1.4;
+}
+.contact-popup__link {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+.contact-popup__link:hover { text-decoration: underline; }
+.contact-popup__close {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.4rem;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 1rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 0.2rem;
+}
+.contact-popup__close:hover { color: var(--text); }
+
 /* ── RESPONSIVE ── */
 @media (max-width: 480px) {
   .day-card {
