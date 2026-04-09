@@ -257,7 +257,11 @@ for (let i = 0; i < 20; i++) {
 const siteHeader = document.getElementById("site-header");
 
 window.addEventListener("scroll", () => {
-  siteHeader.classList.toggle("scrolled", window.scrollY > 72);
+  if (window.scrollY > 72) {
+    siteHeader.classList.add("scrolled");
+  } else if (window.scrollY < 10) {
+    siteHeader.classList.remove("scrolled");
+  }
 }, { passive: true });
 
 // ── Esconder crédito quando footer estiver visível ──
