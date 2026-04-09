@@ -519,12 +519,24 @@ footer {
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.4s;
+  transition: opacity 0.4s, transform 0.2s ease, background 0.35s, border-color 0.35s, color 0.35s;
   pointer-events: none;
   line-height: 1;
+  cursor: pointer;
 }
 
 .visit-bubble:hover { opacity: 1 !important; }
+
+.visit-bubble.flip-out {
+  transform: perspective(300px) rotateY(90deg);
+}
+
+.visit-bubble.instagram-mode {
+  background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
+  border-color: transparent;
+  color: #fff;
+  font-size: 0.65rem;
+}
 
 /* ── BOLINHA DE CONTATO ── */
 .contact-bubble {
