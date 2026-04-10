@@ -199,6 +199,20 @@ function renderSchedule() {
   });
 }
 
+// ── Shared state: indicator, progress bar, auto-highlight ──
+let autoHighlightActive = true;
+let indicatorEl = null;
+let progressBarEl = null;
+let weekBtns = {};
+
+function moveIndicatorToBtn(btn) {
+  if (!indicatorEl || !btn) return;
+  indicatorEl.style.left   = btn.offsetLeft + "px";
+  indicatorEl.style.top    = btn.offsetTop + "px";
+  indicatorEl.style.width  = btn.offsetWidth + "px";
+  indicatorEl.style.height = btn.offsetHeight + "px";
+}
+
 // ── Filter ──
 document.getElementById("filterBar").addEventListener("click", e => {
   const btn = e.target.closest(".filter-btn");
@@ -206,6 +220,8 @@ document.getElementById("filterBar").addEventListener("click", e => {
 
   document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
   btn.classList.add("active");
+  moveIndicatorToBtn(btn);
+  autoHighlightActive = btn.dataset.week === "all";
 
   const week = btn.dataset.week;
   document.querySelectorAll(".week-section").forEach(s => {
@@ -242,6 +258,40 @@ function updateCountdown() {
 }
 
 renderSchedule();
+
+// ── Progress bar ──
+progressBarEl = document.createElement("div");
+progressBarEl.id = "scroll-progress";
+document.getElementById("site-header").appendChild(progressBarEl);
+
+// ── Filter sliding indicator ──
+const filterBarEl = document.getElementById("filterBar");
+indicatorEl = document.createElement("div");
+indicatorEl.className = "filter-indicator";
+filterBarEl.prepend(indicatorEl);
+indicatorEl.style.transition = "none";
+moveIndicatorToBtn(filterBarEl.querySelector(".filter-btn.active"));
+requestAnimationFrame(() => { indicatorEl.style.transition = ""; });
+
+// ── Auto-highlight weeks by scroll ──
+document.querySelectorAll(".filter-btn[data-week]").forEach(b => { weekBtns[b.dataset.week] = b; });
+const sectionHighlightObserver = new IntersectionObserver(entries => {
+  if (!autoHighlightActive) return;
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const btn = weekBtns[entry.target.dataset.week];
+    if (!btn) return;
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    moveIndicatorToBtn(btn);
+    filterBarEl.scrollTo({
+      left: btn.offsetLeft - filterBarEl.offsetWidth / 2 + btn.offsetWidth / 2,
+      behavior: "smooth"
+    });
+  });
+}, { rootMargin: "-15% 0px -70% 0px", threshold: 0 });
+document.querySelectorAll(".week-section").forEach(s => sectionHighlightObserver.observe(s));
+
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
@@ -257,10 +307,28 @@ for (let i = 0; i < 20; i++) {
 const siteHeader = document.getElementById("site-header");
 
 window.addEventListener("scroll", () => {
-  if (window.scrollY > 72) {
+  const scrollY = window.scrollY;
+
+  if (scrollY > 72) {
     siteHeader.classList.add("scrolled");
-  } else if (window.scrollY < 10) {
+  } else if (scrollY < 10) {
     siteHeader.classList.remove("scrolled");
+  }
+
+  // Progress bar
+  if (progressBarEl) {
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    progressBarEl.style.width = total > 0 ? (scrollY / total * 100) + "%" : "0%";
+  }
+
+  // Reset active filter to "Todos" quando voltar ao topo
+  if (scrollY < 100 && autoHighlightActive) {
+    const allBtn = weekBtns["all"];
+    if (allBtn && !allBtn.classList.contains("active")) {
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      allBtn.classList.add("active");
+      moveIndicatorToBtn(allBtn);
+    }
   }
 }, { passive: true });
 
@@ -275,6 +343,57 @@ const todayCard = document.querySelector(".day-card.today");
 if (todayCard) {
   setTimeout(() => todayCard.scrollIntoView({ behavior: "smooth", block: "center" }), 300);
 }
+
+// ── Scroll-reveal animations ──
+(function initRevealObserver() {
+  const weekTitles = document.querySelectorAll(".week-title");
+  const dayCards   = document.querySelectorAll(".day-card");
+
+  document.querySelectorAll(".week-section").forEach(section => {
+    section.querySelectorAll(".day-card").forEach((card, i) => {
+      const delay = card.classList.contains("today") ? 0 : Math.min(i * 60, 300);
+      card.style.setProperty("--reveal-delay", delay + "ms");
+    });
+  });
+
+  weekTitles.forEach(el => el.classList.add("reveal-ready"));
+  dayCards.forEach(el => el.classList.add("reveal-ready"));
+
+  const revealed = new WeakSet();
+
+  function revealEl(el) {
+    if (revealed.has(el)) return;
+    revealed.add(el);
+    el.classList.remove("reveal-ready");
+    el.classList.add("revealed");
+  }
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        revealEl(entry.target);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: "0px 0px -40px 0px" });
+
+  weekTitles.forEach(el => observer.observe(el));
+  dayCards.forEach(el => observer.observe(el));
+
+  document.getElementById("filterBar").addEventListener("click", () => {
+    requestAnimationFrame(() => {
+      document.querySelectorAll(".day-card:not(.hidden), .week-title").forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0 && !revealed.has(el)) {
+          revealEl(el);
+        }
+      });
+    });
+  });
+
+  const todayCardEl = document.querySelector(".day-card.today");
+  if (todayCardEl) setTimeout(() => revealEl(todayCardEl), 350);
+})();
 
 // ── Contador de visitas + toggle Instagram ──
 const visitBubble = document.getElementById("visit-bubble");
