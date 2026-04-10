@@ -276,6 +276,57 @@ if (todayCard) {
   setTimeout(() => todayCard.scrollIntoView({ behavior: "smooth", block: "center" }), 300);
 }
 
+// ── Scroll-reveal animations ──
+(function initRevealObserver() {
+  const weekTitles = document.querySelectorAll(".week-title");
+  const dayCards   = document.querySelectorAll(".day-card");
+
+  document.querySelectorAll(".week-section").forEach(section => {
+    section.querySelectorAll(".day-card").forEach((card, i) => {
+      const delay = card.classList.contains("today") ? 0 : Math.min(i * 60, 300);
+      card.style.setProperty("--reveal-delay", delay + "ms");
+    });
+  });
+
+  weekTitles.forEach(el => el.classList.add("reveal-ready"));
+  dayCards.forEach(el => el.classList.add("reveal-ready"));
+
+  const revealed = new WeakSet();
+
+  function revealEl(el) {
+    if (revealed.has(el)) return;
+    revealed.add(el);
+    el.classList.remove("reveal-ready");
+    el.classList.add("revealed");
+  }
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        revealEl(entry.target);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: "0px 0px -40px 0px" });
+
+  weekTitles.forEach(el => observer.observe(el));
+  dayCards.forEach(el => observer.observe(el));
+
+  document.getElementById("filterBar").addEventListener("click", () => {
+    requestAnimationFrame(() => {
+      document.querySelectorAll(".day-card:not(.hidden), .week-title").forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0 && !revealed.has(el)) {
+          revealEl(el);
+        }
+      });
+    });
+  });
+
+  const todayCardEl = document.querySelector(".day-card.today");
+  if (todayCardEl) setTimeout(() => revealEl(todayCardEl), 350);
+})();
+
 // ── Contador de visitas + toggle Instagram ──
 const visitBubble = document.getElementById("visit-bubble");
 const IG_CACHE = "sj26_ig_count";
