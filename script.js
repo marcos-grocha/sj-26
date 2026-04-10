@@ -199,6 +199,19 @@ function renderSchedule() {
   });
 }
 
+// ── Shared state: indicator + auto-highlight ──
+let autoHighlightActive = true;
+let indicatorEl = null;
+let weekBtns = {};
+
+function moveIndicatorToBtn(btn) {
+  if (!indicatorEl || !btn) return;
+  indicatorEl.style.left   = btn.offsetLeft + "px";
+  indicatorEl.style.top    = btn.offsetTop + "px";
+  indicatorEl.style.width  = btn.offsetWidth + "px";
+  indicatorEl.style.height = btn.offsetHeight + "px";
+}
+
 // ── Filter ──
 document.getElementById("filterBar").addEventListener("click", e => {
   const btn = e.target.closest(".filter-btn");
@@ -206,6 +219,8 @@ document.getElementById("filterBar").addEventListener("click", e => {
 
   document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
   btn.classList.add("active");
+  moveIndicatorToBtn(btn);
+  autoHighlightActive = btn.dataset.week === "all";
 
   const week = btn.dataset.week;
   document.querySelectorAll(".week-section").forEach(s => {
@@ -242,6 +257,35 @@ function updateCountdown() {
 }
 
 renderSchedule();
+
+// ── Filter sliding indicator ──
+const filterBarEl = document.getElementById("filterBar");
+indicatorEl = document.createElement("div");
+indicatorEl.className = "filter-indicator";
+filterBarEl.prepend(indicatorEl);
+indicatorEl.style.transition = "none";
+moveIndicatorToBtn(filterBarEl.querySelector(".filter-btn.active"));
+requestAnimationFrame(() => { indicatorEl.style.transition = ""; });
+
+// ── Auto-highlight weeks by scroll ──
+document.querySelectorAll(".filter-btn[data-week]").forEach(b => { weekBtns[b.dataset.week] = b; });
+const sectionHighlightObserver = new IntersectionObserver(entries => {
+  if (!autoHighlightActive) return;
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const btn = weekBtns[entry.target.dataset.week];
+    if (!btn) return;
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    moveIndicatorToBtn(btn);
+    filterBarEl.scrollTo({
+      left: btn.offsetLeft - filterBarEl.offsetWidth / 2 + btn.offsetWidth / 2,
+      behavior: "smooth"
+    });
+  });
+}, { rootMargin: "-15% 0px -70% 0px", threshold: 0 });
+document.querySelectorAll(".week-section").forEach(s => sectionHighlightObserver.observe(s));
+
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
@@ -257,10 +301,22 @@ for (let i = 0; i < 20; i++) {
 const siteHeader = document.getElementById("site-header");
 
 window.addEventListener("scroll", () => {
-  if (window.scrollY > 72) {
+  const scrollY = window.scrollY;
+
+  if (scrollY > 72) {
     siteHeader.classList.add("scrolled");
-  } else if (window.scrollY < 10) {
+  } else if (scrollY < 10) {
     siteHeader.classList.remove("scrolled");
+  }
+
+  // Reset active filter to "Todos" quando voltar ao topo
+  if (scrollY < 100 && autoHighlightActive) {
+    const allBtn = weekBtns["all"];
+    if (allBtn && !allBtn.classList.contains("active")) {
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      allBtn.classList.add("active");
+      moveIndicatorToBtn(allBtn);
+    }
   }
 }, { passive: true });
 

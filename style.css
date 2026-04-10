@@ -329,16 +329,32 @@ header.scrolled .countdown-wrap {
 
 /* ── WEEK FILTER ── */
 .filter-bar {
+  position: relative;
   display: flex;
   gap: 0.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding: 1.2rem 1rem;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--border);
   animation: filterSlideUp 0.5s 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+.filter-bar::-webkit-scrollbar { display: none; }
+
+.filter-indicator {
+  position: absolute;
+  border-radius: 999px;
+  background: var(--accent);
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              top 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 0;
+}
 
 .filter-btn {
+  position: relative;
+  z-index: 1;
   padding: 0.4rem 1rem;
   border-radius: 999px;
   border: 1px solid var(--border);
@@ -346,15 +362,15 @@ header.scrolled .countdown-wrap {
   color: var(--muted);
   font-size: 0.8rem;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: color 0.2s, border-color 0.2s;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
 
 .filter-btn.active {
-  background: var(--accent);
-  border-color: var(--accent);
+  border-color: transparent;
   color: #fff;
   font-weight: 600;
 }
