@@ -3,7 +3,8 @@
 
 ## Funcionalidades
 - **Em**: Construção.
-<!-- - Contador de visualizações -->
+<!-- - Contador de visualizações: https://api.counterapi.dev/v1/sj26/visits/ -->
+<!-- Contador de cliques: https://api.counterapi.dev/v1/sj26/instagram/ -->
   
 ## Tecnologias
 - **HTML**
