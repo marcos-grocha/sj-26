@@ -279,21 +279,30 @@ if (todayCard) {
 // ── Contador de visitas + toggle Instagram ──
 const visitBubble = document.getElementById("visit-bubble");
 const IG_CACHE = "sj26_ig_count";
+const isDev = ["localhost", "127.0.0.1", ""].includes(location.hostname);
 let visitText = "";
 let igMode = false;
 let igCount = parseInt(localStorage.getItem(IG_CACHE)) || 0;
 
-fetch("https://api.counterapi.dev/v1/sj26/visits/up")
-  .then(r => r.json())
-  .then(({ count }) => {
-    if (count == null) return;
-    visitText = count > 9999 ? "9k+" : count.toLocaleString("pt-BR");
-    visitBubble.textContent = visitText;
-    visitBubble.title = "clique em mim";
-    visitBubble.style.opacity = "0.75";
-    visitBubble.style.pointerEvents = "auto";
-  })
-  .catch(() => {});
+if (!isDev) {
+  fetch("https://api.counterapi.dev/v1/sj26/visits/up")
+    .then(r => r.json())
+    .then(({ count }) => {
+      if (count == null) return;
+      visitText = count > 9999 ? "9k+" : count.toLocaleString("pt-BR");
+      visitBubble.textContent = visitText;
+      visitBubble.title = "clique em mim";
+      visitBubble.style.opacity = "0.75";
+      visitBubble.style.pointerEvents = "auto";
+    })
+    .catch(() => {});
+} else {
+  visitText = "DEV";
+  visitBubble.textContent = visitText;
+  visitBubble.title = "clique em mim";
+  visitBubble.style.opacity = "0.75";
+  visitBubble.style.pointerEvents = "auto";
+}
 
 visitBubble.addEventListener("click", () => {
   visitBubble.classList.add("flip-out");
@@ -314,6 +323,7 @@ visitBubble.addEventListener("click", () => {
 
 // ── Rastrear cliques no Instagram (apenas cliques reais) ──
 function trackInstagramClick() {
+  if (isDev) return;
   fetch("https://api.counterapi.dev/v1/sj26/instagram/up", { keepalive: true })
     .then(r => r.json())
     .then(({ count }) => {
