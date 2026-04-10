@@ -7,10 +7,34 @@
   --border: #2e2e2e;
   --accent: #c8352a;
   --accent2: #922018;
+  --gold: #e8a020;
   --text: #f0f0f0;
   --muted: #888;
   --tag-bg: #2a2a2a;
   --radius: 12px;
+}
+
+/* ── KEYFRAMES ── */
+@keyframes titleGradientSweep {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes titleGlowPulse {
+  0%, 100% { filter: drop-shadow(0 0 10px rgba(232,160,32,0.45)) drop-shadow(0 0 30px rgba(200,53,42,0.18)); }
+  50%       { filter: drop-shadow(0 0 20px rgba(232,160,32,0.75)) drop-shadow(0 0 50px rgba(200,53,42,0.35)); }
+}
+@keyframes headerSlideDown {
+  from { opacity: 0; transform: translateY(-100%); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes filterSlideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes starPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(232,160,32,0); }
+  50%       { box-shadow: 0 0 8px 2px rgba(232,160,32,0.30); }
 }
 
 html { scroll-behavior: smooth; overflow-anchor: none; }
@@ -35,6 +59,7 @@ header {
   overflow: hidden;
   padding: 1.4rem 1.5rem 1.1rem;
   transition: padding 0.45s cubic-bezier(0.4,0,0.2,1), border-color 0.45s;
+  animation: headerSlideDown 1.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 header.scrolled {
@@ -151,19 +176,30 @@ header h1 {
   font-size: clamp(1.8rem, 5vw, 2.8rem);
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: var(--accent);
-  text-shadow: 0 0 35px rgba(232,160,32,0.35), 0 0 70px rgba(232,160,32,0.12);
-  transition: font-size 0.45s cubic-bezier(0.4,0,0.2,1),
-              text-shadow 0.45s,
-              letter-spacing 0.45s;
   line-height: 1.1;
+  background: linear-gradient(110deg,
+    var(--accent) 0%, var(--gold) 35%, #fff0c0 50%, var(--gold) 65%, var(--accent) 100%
+  );
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--accent);
+  animation: titleGradientSweep 5s ease-in-out infinite, titleGlowPulse 3.5s ease-in-out infinite;
+  transition: font-size 0.45s cubic-bezier(0.4,0,0.2,1), letter-spacing 0.45s;
 }
 
 header.scrolled h1 {
   font-size: 1.05rem;
   font-weight: 700;
   letter-spacing: 0;
-  text-shadow: none;
+  animation: none;
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  -webkit-text-fill-color: var(--gold);
+  color: var(--gold);
+  filter: none;
 }
 
 /* ── COMPACT COUNTDOWN ── */
@@ -295,6 +331,7 @@ header.scrolled .countdown-wrap {
   flex-wrap: wrap;
   padding: 1.2rem 1rem;
   border-bottom: 1px solid var(--border);
+  animation: filterSlideUp 0.5s 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .filter-btn {
@@ -447,6 +484,7 @@ main {
   border-color: rgba(232, 160, 32, 0.45);
   background: rgba(232, 160, 32, 0.08);
   font-weight: 700;
+  animation: starPulse 2.8s ease-in-out infinite;
 }
 
 .artist-tag.brasil {
@@ -621,6 +659,14 @@ footer {
   padding: 0 0.2rem;
 }
 .contact-popup__close:hover { color: var(--text); }
+
+/* ── ACCESSIBILITY: Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  header h1 { animation: none; filter: none; -webkit-text-fill-color: var(--gold); background: none; }
+  header { animation: none; }
+  .filter-bar { animation: none; }
+  .artist-tag.star { animation: none; }
+}
 
 /* ── RESPONSIVE ── */
 @media (max-width: 480px) {
