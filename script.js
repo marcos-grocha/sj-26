@@ -199,9 +199,10 @@ function renderSchedule() {
   });
 }
 
-// ── Shared state: indicator + auto-highlight ──
+// ── Shared state: indicator, progress bar, auto-highlight ──
 let autoHighlightActive = true;
 let indicatorEl = null;
+let progressBarEl = null;
 let weekBtns = {};
 
 function moveIndicatorToBtn(btn) {
@@ -258,6 +259,11 @@ function updateCountdown() {
 
 renderSchedule();
 
+// ── Progress bar ──
+progressBarEl = document.createElement("div");
+progressBarEl.id = "scroll-progress";
+document.getElementById("site-header").appendChild(progressBarEl);
+
 // ── Filter sliding indicator ──
 const filterBarEl = document.getElementById("filterBar");
 indicatorEl = document.createElement("div");
@@ -307,6 +313,12 @@ window.addEventListener("scroll", () => {
     siteHeader.classList.add("scrolled");
   } else if (scrollY < 10) {
     siteHeader.classList.remove("scrolled");
+  }
+
+  // Progress bar
+  if (progressBarEl) {
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    progressBarEl.style.width = total > 0 ? (scrollY / total * 100) + "%" : "0%";
   }
 
   // Reset active filter to "Todos" quando voltar ao topo
