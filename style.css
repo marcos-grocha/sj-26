@@ -658,49 +658,62 @@ footer {
 }
 .contact-bubble:hover { opacity: 1 !important; }
 
-/* ── POP-UP DE CONTATO ── */
-.contact-popup {
+/* ── POP-UP DO FESTIVAL TOGGLE ── */
+.festival-popup {
   position: fixed;
-  bottom: 5.2rem;
-  right: 1.5rem;
+  bottom: 8.9rem;
+  right: 5rem;
   z-index: 100;
   background: var(--surface);
   border: 1.5px solid var(--accent);
   border-radius: var(--radius);
-  padding: 0.75rem 2rem 0.75rem 1rem;
+  padding: 0.65rem 1.8rem 0.65rem 0.9rem;
   max-width: 220px;
   opacity: 0;
   transform: scale(0);
   transform-origin: bottom right;
-  transition: opacity 0.35s, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: opacity 0.35s, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+              border-color 0.5s;
   pointer-events: none;
 }
-.contact-popup.visible {
+.festival-popup::after {
+  content: "";
+  position: absolute;
+  right: -8px;
+  bottom: 1rem;
+  width: 0;
+  height: 0;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 8px solid var(--accent);
+  transition: border-left-color 0.5s;
+}
+.festival-popup.visible {
   opacity: 1;
   transform: scale(1);
   pointer-events: auto;
 }
-.contact-popup.collapsing {
+.festival-popup.collapsing {
   opacity: 0;
   transform: scale(0);
-  transition: opacity 0.4s ease-in, transform 0.4s cubic-bezier(0.55, 0, 1, 0.45);
+  transition: opacity 0.35s ease-in, transform 0.35s cubic-bezier(0.55, 0, 1, 0.45);
 }
-.contact-popup__text {
+.festival-popup__text {
   margin: 0;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: var(--text);
-  line-height: 1.4;
+  line-height: 1.35;
 }
-.contact-popup__link {
+.festival-popup__name {
   color: var(--accent);
   font-weight: 700;
-  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.5s;
 }
-.contact-popup__link:hover { text-decoration: underline; }
-.contact-popup__close {
+.festival-popup__close {
   position: absolute;
-  top: 0.3rem;
-  right: 0.4rem;
+  top: 0.2rem;
+  right: 0.35rem;
   background: none;
   border: none;
   color: var(--muted);
@@ -709,7 +722,23 @@ footer {
   line-height: 1;
   padding: 0 0.2rem;
 }
-.contact-popup__close:hover { color: var(--text); }
+.festival-popup__close:hover { color: var(--text); }
+
+@media (max-width: 480px) {
+  .festival-popup {
+    right: 1.5rem;
+    bottom: 12.2rem;
+    max-width: calc(100vw - 3rem);
+  }
+  .festival-popup::after {
+    right: 1rem;
+    bottom: -8px;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 8px solid var(--accent);
+    border-bottom: none;
+  }
+}
 
 /* ── ACCESSIBILITY: Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {

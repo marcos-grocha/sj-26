@@ -533,43 +533,14 @@ document.querySelectorAll('a[href*="instagram.com/marcosjrgm"]').forEach(link =>
   link.addEventListener("click", trackInstagramClick);
 });
 
-// ── Pop-up de contato ──
-const CONTACT_KEY = "sj26_contact_dismissed";
-const contactPopup = document.getElementById("contact-popup");
+// ── Bolinha de contato ──
 const contactBubble = document.getElementById("contact-bubble");
-const contactClose = document.getElementById("contact-popup-close");
-
 contactBubble.textContent = "📞";
-
 contactBubble.addEventListener("click", () => {
   trackInstagramClick();
   window.open("https://www.instagram.com/marcosjrgm/", "_blank", "noopener,noreferrer");
 });
-
-function showContactBubble() {
-  contactBubble.classList.add("visible");
-}
-
-function dismissPopup() {
-  contactPopup.classList.remove("visible");
-  contactPopup.classList.add("collapsing");
-  contactPopup.addEventListener("transitionend", () => {
-    contactPopup.style.display = "none";
-    showContactBubble();
-  }, { once: true });
-  localStorage.setItem(CONTACT_KEY, "1");
-}
-
-contactClose.addEventListener("click", dismissPopup);
-
-if (localStorage.getItem(CONTACT_KEY)) {
-  contactPopup.style.display = "none";
-  showContactBubble();
-} else {
-  setTimeout(() => {
-    contactPopup.classList.add("visible");
-  }, 1000);
-}
+setTimeout(() => contactBubble.classList.add("visible"), 400);
 
 // ── Festival toggle ──
 const festivalToggle = document.getElementById("festival-toggle");
@@ -597,6 +568,10 @@ for (let i = 0; i < CURTAIN_FLAG_COUNT; i++) {
   curtainFlagsContainer.appendChild(f);
 }
 
+const festivalPopup = document.getElementById("festival-popup");
+const festivalPopupName = document.getElementById("festival-popup-name");
+const festivalPopupClose = document.getElementById("festival-popup-close");
+
 function applyFestivalToDOM() {
   const festival = getCurrentFestival();
   const other = getOtherFestival();
@@ -611,6 +586,7 @@ function applyFestivalToDOM() {
   festivalToggle.textContent = other.icon;
   festivalToggle.title = `Ir para ${other.name}`;
   festivalToggle.setAttribute("aria-label", `Ir para ${other.name}`);
+  festivalPopupName.textContent = other.name;
 
   filterBarEl.classList.toggle("is-hidden", festival.weeks.length === 0);
 
@@ -676,10 +652,24 @@ function switchFestival() {
   }
 }
 
-festivalToggle.addEventListener("click", switchFestival);
-festivalToggle.addEventListener("keydown", e => {
-  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); switchFestival(); }
+function hideFestivalPopup() {
+  festivalPopup.classList.remove("visible");
+  festivalPopup.classList.add("collapsing");
+}
+
+festivalToggle.addEventListener("click", () => {
+  hideFestivalPopup();
+  switchFestival();
 });
+festivalToggle.addEventListener("keydown", e => {
+  if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    hideFestivalPopup();
+    switchFestival();
+  }
+});
+festivalPopupClose.addEventListener("click", hideFestivalPopup);
 
 applyFestivalToDOM();
 setTimeout(() => festivalToggle.classList.add("visible"), 400);
+setTimeout(() => festivalPopup.classList.add("visible"), 1000);
