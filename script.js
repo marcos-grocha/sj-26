@@ -157,7 +157,52 @@ const FESTIVALS = {
     name: "Forró Caju",
     subtitle: "Aracaju · Programação Oficial",
     startDate: "2026-06-04T18:00:00",
-    icon: "🎶",
+    icon: `<svg class="caju-icon" viewBox="0 0 64 72" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <radialGradient id="cajuFruit" cx="38%" cy="28%" r="72%">
+      <stop offset="0%"  stop-color="#fff2a8"/>
+      <stop offset="35%" stop-color="#ffc634"/>
+      <stop offset="75%" stop-color="#f26a16"/>
+      <stop offset="100%" stop-color="#a82208"/>
+    </radialGradient>
+    <radialGradient id="cajuNut" cx="35%" cy="30%" r="70%">
+      <stop offset="0%"  stop-color="#d4b07a"/>
+      <stop offset="55%" stop-color="#8f6230"/>
+      <stop offset="100%" stop-color="#3f2a12"/>
+    </radialGradient>
+    <linearGradient id="cajuLeaf" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"  stop-color="#4caf50"/>
+      <stop offset="100%" stop-color="#1b5e20"/>
+    </linearGradient>
+  </defs>
+
+  <!-- folha e pedúnculo -->
+  <path d="M30 3 Q42 -2 46 7 Q38 14 30 9 Z" fill="url(#cajuLeaf)"/>
+  <path d="M30 3 L30 13" stroke="#1b5e20" stroke-width="2" stroke-linecap="round" fill="none"/>
+
+  <!-- fruta (pseudofruto): pêra invertida, ombros largos, afina no fundo -->
+  <path d="M30 12
+           C 14 12, 6 24, 8 38
+           C 9 48, 16 54, 24 55
+           C 28 55, 30 52, 32 52
+           C 34 52, 36 55, 40 55
+           C 48 54, 55 48, 56 38
+           C 58 24, 46 12, 30 12 Z"
+        fill="url(#cajuFruit)"/>
+  <!-- brilho na fruta -->
+  <ellipse cx="22" cy="24" rx="6" ry="9" fill="#ffffff" opacity="0.38"/>
+  <ellipse cx="24" cy="22" rx="2.5" ry="4" fill="#ffffff" opacity="0.7"/>
+
+  <!-- castanha: formato de rim/vírgula saindo da base da fruta, curvando pra direita -->
+  <path d="M28 52
+           C 22 54, 18 60, 24 66
+           C 32 72, 48 68, 50 58
+           C 51 52, 46 49, 41 52
+           C 37 54, 33 51, 28 52 Z"
+        fill="url(#cajuNut)"/>
+  <!-- brilho na castanha -->
+  <ellipse cx="30" cy="58" rx="3" ry="1.6" fill="#ffe7b5" opacity="0.55" transform="rotate(-18 30 58)"/>
+</svg>`,
     theme: "theme-forro-caju",
     weeks: [],
   },
@@ -583,7 +628,7 @@ function applyFestivalToDOM() {
   festivalSubtitleEl.textContent = festival.subtitle;
   document.title = `${festival.name} — Programação`;
 
-  festivalToggle.textContent = other.icon;
+  festivalToggle.innerHTML = other.icon;
   festivalToggle.title = `Ir para ${other.name}`;
   festivalToggle.setAttribute("aria-label", `Ir para ${other.name}`);
   festivalPopupName.textContent = other.name;
