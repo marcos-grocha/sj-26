@@ -263,9 +263,11 @@ header.scrolled p.subtitle {
 
 /* ── HEADER CREDIT ── */
 .header-credit {
-  font-size: 0.68rem;
-  color: var(--muted);
-  margin-top: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  margin-top: 0.55rem;
   position: relative;
   z-index: 1;
   overflow: hidden;
@@ -273,17 +275,12 @@ header.scrolled p.subtitle {
   opacity: 1;
   transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1),
               opacity 0.35s,
-              margin 0.4s;
+              margin 0.4s,
+              color 0.5s ease;
 }
 
 header.scrolled .header-credit {
-  margin-top: 0.35rem;
-}
-
-.header-credit a {
-  color: var(--accent);
-  text-decoration: none;
-  font-weight: 600;
+  margin-top: 0.3rem;
 }
 
 header.footer-visible .header-credit {

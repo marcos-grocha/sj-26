@@ -604,9 +604,9 @@ function applyFestivalToDOM() {
   document.body.classList.remove(...Object.values(FESTIVALS).map(f => f.theme));
   document.body.classList.add(festival.theme);
 
-  festivalTitleEl.textContent = `${festival.name} 2026`;
+  festivalTitleEl.textContent = festival.name;
   festivalSubtitleEl.textContent = festival.subtitle;
-  document.title = `${festival.name} 2026 — Programação`;
+  document.title = `${festival.name} — Programação`;
 
   festivalToggle.textContent = other.icon;
   festivalToggle.title = `Ir para ${other.name}`;
