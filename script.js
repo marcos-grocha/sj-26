@@ -1,226 +1,4 @@
-const ARRAIA_WEEKS = [
-  {
-    id: 1,
-    title: "Semana 1 · Final de Maio",
-    days: [
-      { date: "2026-05-29", weekday: "Sex", month: "Maio", special: null,
-        artists: ["Fogo na Saia", "Seu Desejo", 'Calcinha Preta "Atemporal"'],
-        highlights: ['Calcinha Preta "Atemporal"'],
-        p360: "Chirlys Trindade" },
-      { date: "2026-05-30", weekday: "Sáb", month: "Maio", special: null,
-        artists: ["Forró Brasil", "Adelmário Coelho", "Kátia e Aduílio", "Joelma"],
-        highlights: ["Joelma"],
-        p360: "Forró 10" },
-      { date: "2026-05-31", weekday: "Dom", month: "Maio", special: null,
-        artists: ["Cintura Fina", "Baby Som", "Henry Freitas"],
-        highlights: ["Henry Freitas"],
-        p360: "Zé Tramela" },
-    ]
-  },
-  {
-    id: 2,
-    title: "Semana 2 · Início de Junho",
-    days: [
-      { date: "2026-06-02", weekday: "Ter", month: "Jun", special: null,
-        artists: ["Leonne o Nobre", "Thiago Aquino", "Natanzinho Lima"],
-        highlights: ["Natanzinho Lima"],
-        p360: "Ittauan" },
-      { date: "2026-06-03", weekday: "Qua", month: "Jun", special: null,
-        artists: ["As Patricinhas", "Cavalo de Pau", "Gustavo Mioto"],
-        highlights: [],
-        p360: "Jan Vaqueiro" },
-      { date: "2026-06-04", weekday: "Qui", month: "Jun", special: null,
-        artists: ["Jeanny Lins", "Walkyria Santos", "Ana Castela"],
-        highlights: ["Ana Castela"],
-        p360: "Alê Ferraz" },
-      { date: "2026-06-05", weekday: "Sex", month: "Jun", special: null,
-        artists: ["Geninho Batalha", "Jonas Esticado", "Iguinho e Lulinha", "Ávine Vinny"],
-        highlights: ["Iguinho e Lulinha", "Jonas Esticado"],
-        p360: "André Novaes" },
-      { date: "2026-06-06", weekday: "Sáb", month: "Jun", special: null,
-        artists: ["Zueirões do Forró", "Guilherme Dantas", "Duas Paixões", "Tarcísio do Acordeon"],
-        highlights: ["Tarcísio do Acordeon"],
-        p360: "Dudu Moral" },
-      { date: "2026-06-07", weekday: "Dom", month: "Jun", special: null,
-        artists: ["Flor de Maracujá", "Dorgival Dantas", "Magníficos"],
-        highlights: ["Dorgival Dantas"],
-        p360: "Elton Motta" },
-    ]
-  },
-  {
-    id: 3,
-    title: "Semana 3 · Dia dos Namorados & Santo Antônio",
-    days: [
-      { date: "2026-06-09", weekday: "Ter", month: "Jun", special: null,
-        artists: ["Unha Pintada", "Devinho Novaes", "Mikael Santos"],
-        highlights: ["Mikael Santos"],
-        p360: "Eve Sandes" },
-      { date: "2026-06-10", weekday: "Qua", month: "Jun", special: null,
-        artists: ["Igor Ativado", "João Gomes", "Nattan"],
-        highlights: ["João Gomes", "Nattan"],
-        p360: "Alisson Lima" },
-      { date: "2026-06-11", weekday: "Qui", month: "Jun", special: null,
-        artists: ["Nineia Oliveira", "Samyra Show", "Simone Mendes"],
-        highlights: ["Samyra Show", "Simone Mendes"],
-        p360: "Larissa Costa" },
-      { date: "2026-06-12", weekday: "Sex", month: "Jun", special: "Dia dos Namorados",
-        artists: ["Quarto de Milha", "Falamansa", "Zé Vaqueiro", "Gil Mendes"],
-        highlights: ["Falamansa", "Zé Vaqueiro"],
-        p360: "Netto Ventura" },
-      { date: "2026-06-13", weekday: "Sáb", month: "Jun", special: "Santo Antônio",
-        artists: ["Transmissão Jogo do Brasil", "Mastruz com Leite", "Raí Saia Rodada", "Nuzio Medeiros"],
-        highlights: ["Raí Saia Rodada"],
-        worldcupHighlights: ["Transmissão Jogo do Brasil"],
-        p360: "Cartas de Tarô" },
-      { date: "2026-06-14", weekday: "Dom", month: "Jun", special: null,
-        artists: ["Erivaldo de Carira", "Batista Lima", "Zé Cantor"],
-        highlights: [],
-        p360: "Raio da Silibrina" },
-    ]
-  },
-  {
-    id: 4,
-    title: "Semana 4 · Reta Final e São João",
-    days: [
-      { date: "2026-06-16", weekday: "Ter", month: "Jun", special: null,
-        artists: ["Nadson o Ferinha", "Silvanno Salles", "Heitor Costa"],
-        highlights: ["Nadson o Ferinha", "Heitor Costa"],
-        p360: "Heitor Santos" },
-      { date: "2026-06-17", weekday: "Qua", month: "Jun", special: null,
-        artists: ["Ranniery Gomes", "Cavaleiros do Forró", "Limão com Mel"],
-        highlights: ["Cavaleiros do Forró", "Limão com Mel"],
-        p360: "Vannessa Porto" },
-      { date: "2026-06-18", weekday: "Qui", month: "Jun", special: null,
-        artists: ["Ju Marques", "Solange Almeida", "Fernandinha"],
-        highlights: ["Solange Almeida"],
-        p360: "Bia Brasil" },
-      { date: "2026-06-19", weekday: "Sex", month: "Jun", special: null,
-        artists: ["Luan Estilizado", "Transmissão Jogo do Brasil", "Luan Santana", "João Bosco e Vinícius"],
-        highlights: ["Luan Santana"],
-        worldcupHighlights: ["Transmissão Jogo do Brasil"],
-        p360: "Ygor Raniere" },
-      { date: "2026-06-20", weekday: "Sáb", month: "Jun", special: null,
-        artists: ["Maraisa Cantora", "Brasas do Forró", "Yasmin Sensação", "Filho do Piseiro"],
-        highlights: ["Yasmin Sensação", "Filho do Piseiro"],
-        p360: "Lucas Castro" },
-      { date: "2026-06-21", weekday: "Dom", month: "Jun", special: null,
-        artists: ["Marcelo Balla", "Claudio Ney e Juliana", "Gusttavo Lima"],
-        highlights: ["Gusttavo Lima"],
-        p360: "Franquinho Vaqueiro" },
-    ]
-  },
-  {
-    id: 5,
-    title: "Semana 5 · São João & São Pedro",
-    days: [
-      { date: "2026-06-23", weekday: "Ter", month: "Jun", special: "Véspera de São João",
-        artists: ["Luanzinho Moraes", "Fabiano Guimarães", "Rey Vaqueiro", "Painel de Controle"],
-        highlights: ["Rey Vaqueiro"],
-        p360: "Marcelinho" },
-      { date: "2026-06-24", weekday: "Qua", month: "Jun", special: "Dia de São João",
-        artists: ["Transmissão Jogo do Brasil", "Alcymar Monteiro", "Geraldo Azevedo", "Matheus e Kauan"],
-        highlights: ["Matheus e Kauan"],
-        worldcupHighlights: ["Transmissão Jogo do Brasil"],
-        p360: "Danielzinho Jr." },
-      { date: "2026-06-25", weekday: "Qui", month: "Jun", special: null,
-        artists: ["Liene Show", "Taty Girl", "Lauana Prado"],
-        highlights: ["Liene Show", "Taty Girl"],
-        p360: "Tatah Santana" },
-      { date: "2026-06-26", weekday: "Sex", month: "Jun", special: null,
-        artists: ["Danielzinho o Kaceteiro", "Eline Martins", "Diego e Victor Hugo", "Vitor Fernandes"],
-        highlights: [],
-        p360: "Brenno Mattos" },
-      { date: "2026-06-27", weekday: "Sáb", month: "Jun", special: null,
-        artists: ["Cuscuz com Leite", "Zezo", "Bruno e Marrone", "Klessinha"],
-        highlights: ["Zezo", "Bruno e Marrone"],
-        p360: "Gardênia Mel" },
-      { date: "2026-06-28", weekday: "Dom", month: "Jun", special: null,
-        artists: ["Pedro Lua", "Elba Ramalho", "Flávio José", "Mestrinho"],
-        highlights: [],
-        p360: "Forró Cana com Limão" },
-    ]
-  }
-];
-
-const FESTIVALS = {
-  "arraia-do-povo": {
-    id: "arraia-do-povo",
-    name: "Arraiá do Povo",
-    subtitle: "Aracaju · Programação Oficial",
-    startDate: "2026-05-29T18:00:00",
-icon: `<svg class="orla-icon" viewBox="0 0 96 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <path fill="#1e3a7a" fill-rule="evenodd" d="
-    M 0 48 L 0 20 Q 0 12 10 12 Q 20 12 20 20 L 20 48 Z
-    M 4 48 L 4 22 Q 4 16 10 16 Q 16 16 16 22 L 16 48 Z
-
-    M 20 48 L 20 14 Q 20 2 34 2 Q 48 2 48 14 L 48 48 Z
-    M 24 48 L 24 16 Q 24 6 34 6 Q 44 6 44 16 L 44 48 Z
-
-    M 48 48 L 48 14 Q 48 2 62 2 Q 76 2 76 14 L 76 48 Z
-    M 52 48 L 52 16 Q 52 6 62 6 Q 72 6 72 16 L 72 48 Z
-
-    M 76 48 L 76 20 Q 76 12 86 12 Q 96 12 96 20 L 96 48 Z
-    M 80 48 L 80 22 Q 80 16 86 16 Q 92 16 92 22 L 92 48 Z
-  "/>
-</svg>`,
-    theme: "theme-arraia",
-    weeks: ARRAIA_WEEKS,
-  },
-  "forro-caju": {
-    id: "forro-caju",
-    name: "Forró Caju",
-    subtitle: "Aracaju · Programação Oficial",
-    startDate: "2026-06-04T18:00:00",
-    icon: `<svg class="caju-icon" viewBox="0 0 64 72" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <defs>
-    <radialGradient id="cajuFruit" cx="38%" cy="28%" r="72%">
-      <stop offset="0%"  stop-color="#fff2a8"/>
-      <stop offset="35%" stop-color="#ffc634"/>
-      <stop offset="75%" stop-color="#f26a16"/>
-      <stop offset="100%" stop-color="#a82208"/>
-    </radialGradient>
-    <radialGradient id="cajuNut" cx="35%" cy="30%" r="70%">
-      <stop offset="0%"  stop-color="#d4b07a"/>
-      <stop offset="55%" stop-color="#8f6230"/>
-      <stop offset="100%" stop-color="#3f2a12"/>
-    </radialGradient>
-    <linearGradient id="cajuLeaf" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%"  stop-color="#4caf50"/>
-      <stop offset="100%" stop-color="#1b5e20"/>
-    </linearGradient>
-  </defs>
-
-  <!-- folha e pedúnculo -->
-  <path d="M30 3 Q42 -2 46 7 Q38 14 30 9 Z" fill="url(#cajuLeaf)"/>
-  <path d="M30 3 L30 13" stroke="#1b5e20" stroke-width="2" stroke-linecap="round" fill="none"/>
-
-  <!-- fruta (pseudofruto): pêra invertida, ombros largos, afina no fundo -->
-  <path d="M30 12
-           C 14 12, 6 24, 8 38
-           C 9 48, 16 54, 24 55
-           C 28 55, 30 52, 32 52
-           C 34 52, 36 55, 40 55
-           C 48 54, 55 48, 56 38
-           C 58 24, 46 12, 30 12 Z"
-        fill="url(#cajuFruit)"/>
-  <!-- brilho na fruta -->
-  <ellipse cx="22" cy="24" rx="6" ry="9" fill="#ffffff" opacity="0.38"/>
-  <ellipse cx="24" cy="22" rx="2.5" ry="4" fill="#ffffff" opacity="0.7"/>
-
-  <!-- castanha: formato de rim/vírgula saindo da base da fruta, curvando pra direita -->
-  <path d="M28 52
-           C 22 54, 18 60, 24 66
-           C 32 72, 48 68, 50 58
-           C 51 52, 46 49, 41 52
-           C 37 54, 33 51, 28 52 Z"
-        fill="url(#cajuNut)"/>
-  <!-- brilho na castanha -->
-  <ellipse cx="30" cy="58" rx="3" ry="1.6" fill="#ffe7b5" opacity="0.55" transform="rotate(-18 30 58)"/>
-</svg>`,
-    theme: "theme-forro-caju",
-    weeks: [],
-  },
-};
+// Dados (ARRAIA_WEEKS, FORRO_CAJU_STAGES, FESTIVALS) em data.js
 
 const ACTIVE_FESTIVAL_KEY = "sj26_active_festival";
 let currentFestivalId = localStorage.getItem(ACTIVE_FESTIVAL_KEY) || "arraia-do-povo";
@@ -283,7 +61,7 @@ function renderSchedule() {
 
     const title = document.createElement("p");
     title.className = "week-title";
-    title.innerHTML = `<span>${week.title.split("·")[0]}</span>·${week.title.split("·")[1]}`;
+    title.innerHTML = `<span>${week.title.split("·")[0]}</span>·${week.title.split("·").slice(1).join("·")}`;
     section.appendChild(title);
 
     week.days.forEach(day => {
@@ -309,10 +87,16 @@ function renderSchedule() {
               `<span class="artist-tag${day.highlights && day.highlights.includes(a) ? " star" : ""}${day.worldcupHighlights && day.worldcupHighlights.includes(a) ? " brasil" : ""}">${a}</span>`
             ).join("")}
           </div>
+          ${day.p360 ? `
           <div class="palco360">
             <span class="palco360-label">Palco 360°</span>
             <span class="palco360-artist">${day.p360}</span>
-          </div>
+          </div>` : ""}
+          ${day.location ? `
+          <div class="day-location">
+            <span class="day-location__pin" aria-hidden="true">📍</span>
+            <span class="day-location__text">${day.location}</span>
+          </div>` : ""}
         </div>
       `;
 
@@ -335,6 +119,30 @@ function moveIndicatorToBtn(btn) {
   indicatorEl.style.top    = btn.offsetTop + "px";
   indicatorEl.style.width  = btn.offsetWidth + "px";
   indicatorEl.style.height = btn.offsetHeight + "px";
+}
+
+function renderFilterButtons() {
+  const festival = getCurrentFestival();
+  const filterBar = document.getElementById("filterBar");
+
+  filterBar.querySelectorAll(".filter-btn").forEach(b => b.remove());
+
+  const allBtn = document.createElement("button");
+  allBtn.className = "filter-btn active";
+  allBtn.dataset.week = "all";
+  allBtn.textContent = "Tudo";
+  filterBar.appendChild(allBtn);
+
+  festival.weeks.forEach(week => {
+    const btn = document.createElement("button");
+    btn.className = "filter-btn";
+    btn.dataset.week = week.id;
+    btn.textContent = week.filterLabel || week.title;
+    filterBar.appendChild(btn);
+  });
+
+  weekBtns = {};
+  filterBar.querySelectorAll(".filter-btn").forEach(b => { weekBtns[b.dataset.week] = b; });
 }
 
 // ── Filter ──
@@ -381,8 +189,6 @@ function updateCountdown() {
     `${pad(d)}d ${pad(h)}h ${pad(m)}m ${pad(s)}s`;
 }
 
-renderSchedule();
-
 // ── Progress bar ──
 progressBarEl = document.createElement("div");
 progressBarEl.id = "scroll-progress";
@@ -394,11 +200,9 @@ indicatorEl = document.createElement("div");
 indicatorEl.className = "filter-indicator";
 filterBarEl.prepend(indicatorEl);
 indicatorEl.style.transition = "none";
-moveIndicatorToBtn(filterBarEl.querySelector(".filter-btn.active"));
 requestAnimationFrame(() => { indicatorEl.style.transition = ""; });
 
 // ── Auto-highlight weeks by scroll ──
-document.querySelectorAll(".filter-btn[data-week]").forEach(b => { weekBtns[b.dataset.week] = b; });
 const sectionHighlightObserver = new IntersectionObserver(entries => {
   if (!autoHighlightActive) return;
   entries.forEach(entry => {
@@ -418,9 +222,7 @@ const sectionHighlightObserver = new IntersectionObserver(entries => {
 function observeCurrentWeekSections() {
   document.querySelectorAll(".week-section").forEach(s => sectionHighlightObserver.observe(s));
 }
-observeCurrentWeekSections();
 
-updateCountdown();
 setInterval(updateCountdown, 1000);
 
 // ── Bandeirinhas ──
@@ -466,12 +268,6 @@ new IntersectionObserver(entries => {
   siteHeader.classList.toggle("footer-visible", entries[0].isIntersecting);
 }, { threshold: 0 }).observe(footerEl);
 
-// Auto-scroll to today
-const todayCard = document.querySelector(".day-card.today");
-if (todayCard) {
-  setTimeout(() => todayCard.scrollIntoView({ behavior: "smooth", block: "center" }), 300);
-}
-
 // ── Scroll-reveal animations ──
 const revealed = new WeakSet();
 let revealObserver = null;
@@ -514,8 +310,6 @@ function applyRevealToCurrentDOM() {
   const todayCardEl = document.querySelector(".day-card.today");
   if (todayCardEl) setTimeout(() => revealEl(todayCardEl), 350);
 }
-
-applyRevealToCurrentDOM();
 
 document.getElementById("filterBar").addEventListener("click", () => {
   requestAnimationFrame(() => {
@@ -654,6 +448,7 @@ function applyFestivalToDOM() {
 
   filterBarEl.classList.toggle("is-hidden", festival.weeks.length === 0);
 
+  renderFilterButtons();
   renderSchedule();
   observeCurrentWeekSections();
   applyRevealToCurrentDOM();
@@ -661,7 +456,6 @@ function applyFestivalToDOM() {
 
   const allBtn = weekBtns["all"];
   if (allBtn) {
-    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
     allBtn.classList.add("active");
     autoHighlightActive = true;
     requestAnimationFrame(() => moveIndicatorToBtn(allBtn));
@@ -735,5 +529,12 @@ festivalToggle.addEventListener("keydown", e => {
 festivalPopupClose.addEventListener("click", hideFestivalPopup);
 
 applyFestivalToDOM();
+
+// Auto-scroll to today
+const todayCard = document.querySelector(".day-card.today");
+if (todayCard) {
+  setTimeout(() => todayCard.scrollIntoView({ behavior: "smooth", block: "center" }), 300);
+}
+
 setTimeout(() => festivalToggle.classList.add("visible"), 400);
 setTimeout(() => festivalPopup.classList.add("visible"), 1000);
