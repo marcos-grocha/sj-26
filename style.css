@@ -23,7 +23,7 @@ body.theme-arraia {
 
 body.theme-forro-caju {
   --accent: #1e8a5a;
-  --accent2: #1e60a0;
+  --accent2: #0f4a31; /* #1e60a0; */
   --gold: #e8a020;
 }
 
@@ -411,6 +411,25 @@ main {
 .week-title span {
   color: var(--accent);
   font-weight: 700;
+}
+
+.day-location {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.3rem;
+}
+
+.day-location__pin {
+  font-size: 0.78rem;
+  line-height: 1;
+  filter: grayscale(0.2);
+}
+
+.day-location__text {
+  font-size: 0.78rem;
+  color: #aaa;
+  letter-spacing: 0.02em;
 }
 
 /* ── SCROLL REVEAL ── */
