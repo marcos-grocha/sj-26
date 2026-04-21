@@ -559,6 +559,11 @@ visitBubble.addEventListener("click", () => {
   }, 200);
 });
 
+// ── Contador oculto (consultado sob demanda via API) ──
+if (!isDev) {
+  fetch("https://abacus.jasoncameron.dev/hit/sj26/pageviews", { keepalive: true }).catch(() => {});
+}
+
 // ── Rastrear cliques no Instagram (apenas cliques reais) ──
 function trackInstagramClick() {
   if (isDev) return;
