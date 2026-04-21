@@ -148,7 +148,21 @@ const FESTIVALS = {
     name: "Arraiá do Povo",
     subtitle: "Aracaju · Programação Oficial",
     startDate: "2026-05-29T18:00:00",
-    icon: "🔥",
+icon: `<svg class="orla-icon" viewBox="0 0 96 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <path fill="#1e3a7a" fill-rule="evenodd" d="
+    M 0 48 L 0 20 Q 0 12 10 12 Q 20 12 20 20 L 20 48 Z
+    M 4 48 L 4 22 Q 4 16 10 16 Q 16 16 16 22 L 16 48 Z
+
+    M 20 48 L 20 14 Q 20 2 34 2 Q 48 2 48 14 L 48 48 Z
+    M 24 48 L 24 16 Q 24 6 34 6 Q 44 6 44 16 L 44 48 Z
+
+    M 48 48 L 48 14 Q 48 2 62 2 Q 76 2 76 14 L 76 48 Z
+    M 52 48 L 52 16 Q 52 6 62 6 Q 72 6 72 16 L 72 48 Z
+
+    M 76 48 L 76 20 Q 76 12 86 12 Q 96 12 96 20 L 96 48 Z
+    M 80 48 L 80 22 Q 80 16 86 16 Q 92 16 92 22 L 92 48 Z
+  "/>
+</svg>`,
     theme: "theme-arraia",
     weeks: ARRAIA_WEEKS,
   },
