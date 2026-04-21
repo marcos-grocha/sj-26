@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Arraiá do Povo 2026 — Programação</title>
+  <title>São João Aracaju 2026 — Programação</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="theme-arraia">
 
 <header id="site-header">
   <div class="header-flags" id="header-flags" aria-hidden="true"></div>
 
   <div class="header-main-row">
-    <h1>Arraiá do Povo 2026</h1>
+    <h1 id="festival-title">Arraiá do Povo</h1>
     <div class="countdown-compact" id="countdown-compact" aria-hidden="true"></div>
   </div>
 
-  <p class="subtitle">Aracaju · Programação Oficial</p>
+  <p class="subtitle" id="festival-subtitle">Aracaju · Programação Oficial</p>
 
   <div class="countdown-wrap" id="countdown">
     <div class="countdown-block"><span class="countdown-num" id="cd-d">--</span><span class="countdown-label">dias</span></div>
@@ -28,9 +28,7 @@
     <div class="countdown-block"><span class="countdown-num" id="cd-s">--</span><span class="countdown-label">seg</span></div>
   </div>
 
-  <div class="header-credit">
-    Desenvolvido por <a href="https://www.instagram.com/marcosjrgm/" target="_blank" rel="noopener noreferrer">@marcosjrgm</a>
-  </div>
+  <div class="header-credit">2026</div>
 </header>
 
 <div class="filter-bar" id="filterBar">
@@ -45,7 +43,7 @@
 <main id="schedule"></main>
 
 <footer>
-  Arraiá do Povo 2026
+  São João • 2026 • Aracaju
   <br><br>
   Desenvolvido por <a href="https://www.instagram.com/marcosjrgm/" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none;font-weight:600;">@marcosjrgm</a>
 </footer>
@@ -54,12 +52,41 @@
 
 <div id="contact-bubble" class="contact-bubble" title="Sugestões? Fale comigo!" aria-label="Contato"></div>
 
-<div id="contact-popup" class="contact-popup" role="dialog" aria-label="Sugestão de melhoria">
-  <button class="contact-popup__close" id="contact-popup-close" aria-label="Fechar">×</button>
-  <p class="contact-popup__text">
-    Sugestões?
-    <a href="https://www.instagram.com/marcosjrgm/" target="_blank" rel="noopener noreferrer" class="contact-popup__link">Fale comigo!</a>
+<div id="festival-toggle" class="festival-toggle" role="button" tabindex="0" aria-label="Alternar festa"></div>
+
+<div id="festival-popup" class="festival-popup" role="dialog" aria-label="Alternar festa">
+  <button class="festival-popup__close" id="festival-popup-close" aria-label="Fechar">×</button>
+  <p class="festival-popup__text">
+    Confira também:
+    <span class="festival-popup__name" id="festival-popup-name">Forró Caju</span>!
   </p>
+</div>
+
+<div id="festival-curtain" class="festival-curtain" aria-hidden="true">
+  <div class="curtain-rope"></div>
+  <div class="curtain-flags"></div>
+</div>
+
+<div id="festival-bonfire" class="festival-bonfire" aria-hidden="true">
+  <div class="bonfire-darken"></div>
+  <div class="bonfire-glow"></div>
+  <div class="bonfire-flames">
+    <span class="flame"></span>
+    <span class="flame"></span>
+    <span class="flame"></span>
+    <span class="flame"></span>
+    <span class="flame"></span>
+  </div>
+  <div class="bonfire-logs">
+    <span class="log log-back"></span>
+    <span class="log log-left"></span>
+    <span class="log log-right"></span>
+    <span class="log log-front"></span>
+    <span class="ember ember-1"></span>
+    <span class="ember ember-2"></span>
+    <span class="ember ember-3"></span>
+  </div>
+  <div class="bonfire-sparks"></div>
 </div>
 
 <script src="script.js"></script>

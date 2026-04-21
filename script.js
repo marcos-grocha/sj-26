@@ -1,4 +1,4 @@
-const WEEKS = [
+const ARRAIA_WEEKS = [
   {
     id: 1,
     title: "Semana 1 · Final de Maio",
@@ -142,17 +142,127 @@ const WEEKS = [
   }
 ];
 
+const FESTIVALS = {
+  "arraia-do-povo": {
+    id: "arraia-do-povo",
+    name: "Arraiá do Povo",
+    subtitle: "Aracaju · Programação Oficial",
+    startDate: "2026-05-29T18:00:00",
+    icon: "🔥",
+    theme: "theme-arraia",
+    weeks: ARRAIA_WEEKS,
+  },
+  "forro-caju": {
+    id: "forro-caju",
+    name: "Forró Caju",
+    subtitle: "Aracaju · Programação Oficial",
+    startDate: "2026-06-04T18:00:00",
+    icon: `<svg class="caju-icon" viewBox="0 0 64 72" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <radialGradient id="cajuFruit" cx="38%" cy="28%" r="72%">
+      <stop offset="0%"  stop-color="#fff2a8"/>
+      <stop offset="35%" stop-color="#ffc634"/>
+      <stop offset="75%" stop-color="#f26a16"/>
+      <stop offset="100%" stop-color="#a82208"/>
+    </radialGradient>
+    <radialGradient id="cajuNut" cx="35%" cy="30%" r="70%">
+      <stop offset="0%"  stop-color="#d4b07a"/>
+      <stop offset="55%" stop-color="#8f6230"/>
+      <stop offset="100%" stop-color="#3f2a12"/>
+    </radialGradient>
+    <linearGradient id="cajuLeaf" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"  stop-color="#4caf50"/>
+      <stop offset="100%" stop-color="#1b5e20"/>
+    </linearGradient>
+  </defs>
+
+  <!-- folha e pedúnculo -->
+  <path d="M30 3 Q42 -2 46 7 Q38 14 30 9 Z" fill="url(#cajuLeaf)"/>
+  <path d="M30 3 L30 13" stroke="#1b5e20" stroke-width="2" stroke-linecap="round" fill="none"/>
+
+  <!-- fruta (pseudofruto): pêra invertida, ombros largos, afina no fundo -->
+  <path d="M30 12
+           C 14 12, 6 24, 8 38
+           C 9 48, 16 54, 24 55
+           C 28 55, 30 52, 32 52
+           C 34 52, 36 55, 40 55
+           C 48 54, 55 48, 56 38
+           C 58 24, 46 12, 30 12 Z"
+        fill="url(#cajuFruit)"/>
+  <!-- brilho na fruta -->
+  <ellipse cx="22" cy="24" rx="6" ry="9" fill="#ffffff" opacity="0.38"/>
+  <ellipse cx="24" cy="22" rx="2.5" ry="4" fill="#ffffff" opacity="0.7"/>
+
+  <!-- castanha: formato de rim/vírgula saindo da base da fruta, curvando pra direita -->
+  <path d="M28 52
+           C 22 54, 18 60, 24 66
+           C 32 72, 48 68, 50 58
+           C 51 52, 46 49, 41 52
+           C 37 54, 33 51, 28 52 Z"
+        fill="url(#cajuNut)"/>
+  <!-- brilho na castanha -->
+  <ellipse cx="30" cy="58" rx="3" ry="1.6" fill="#ffe7b5" opacity="0.55" transform="rotate(-18 30 58)"/>
+</svg>`,
+    theme: "theme-forro-caju",
+    weeks: [],
+  },
+};
+
+const ACTIVE_FESTIVAL_KEY = "sj26_active_festival";
+let currentFestivalId = localStorage.getItem(ACTIVE_FESTIVAL_KEY) || "arraia-do-povo";
+if (!FESTIVALS[currentFestivalId]) currentFestivalId = "arraia-do-povo";
+
+function getCurrentFestival() { return FESTIVALS[currentFestivalId]; }
+function getOtherFestival() {
+  const ids = Object.keys(FESTIVALS);
+  return FESTIVALS[ids.find(id => id !== currentFestivalId)];
+}
+
 // ── Render ──
 const today = new Date();
 const todayStr = today.toISOString().slice(0, 10);
 
 function dayNum(dateStr) { return parseInt(dateStr.split("-")[2]); }
 
+function formatDatePtBr(iso) {
+  const [y, m, d] = iso.split("T")[0].split("-");
+  return `${d}/${m}/${y}`;
+}
+
+function renderSkeleton(container, festival) {
+  const wrap = document.createElement("div");
+  wrap.className = "skeleton-wrap";
+  wrap.innerHTML = `
+    <p class="skeleton-message">Programação em breve · começa em ${formatDatePtBr(festival.startDate)}</p>
+    ${Array.from({ length: 4 }).map(() => `
+      <div class="day-card skeleton">
+        <div class="day-date">
+          <div class="skeleton-line skeleton-num"></div>
+          <div class="skeleton-line skeleton-small"></div>
+          <div class="skeleton-line skeleton-small"></div>
+        </div>
+        <div class="day-content">
+          <div class="skeleton-line skeleton-tag"></div>
+          <div class="skeleton-line skeleton-tag"></div>
+          <div class="skeleton-line skeleton-tag short"></div>
+        </div>
+      </div>
+    `).join("")}
+  `;
+  container.appendChild(wrap);
+}
+
 function renderSchedule() {
+  const festival = getCurrentFestival();
   const container = document.getElementById("schedule");
   container.innerHTML = "";
 
-  WEEKS.forEach(week => {
+  if (!festival.weeks.length) {
+    renderSkeleton(container, festival);
+    return;
+  }
+
+  festival.weeks.forEach(week => {
     const section = document.createElement("section");
     section.className = "week-section";
     section.dataset.week = week.id;
@@ -230,16 +340,16 @@ document.getElementById("filterBar").addEventListener("click", e => {
 });
 
 // ── Countdown ──
-const EVENT_START = new Date("2026-05-29T18:00:00");
 const pad = n => String(n).padStart(2, "0");
 
 function updateCountdown() {
+  const festival = getCurrentFestival();
   const now = new Date();
-  const diff = EVENT_START - now;
+  const diff = new Date(festival.startDate) - now;
 
   if (diff <= 0) {
     document.getElementById("countdown").innerHTML =
-      '<p style="color:var(--accent);font-weight:700;font-size:1rem;padding:0.5rem 0">O Arraiá do Povo começou! 🎉</p>';
+      `<p style="color:var(--accent);font-weight:700;font-size:1rem;padding:0.5rem 0">O ${festival.name} começou! 🎉</p>`;
     document.getElementById("countdown-compact").textContent = "Acontecendo agora!";
     return;
   }
@@ -290,7 +400,11 @@ const sectionHighlightObserver = new IntersectionObserver(entries => {
     });
   });
 }, { rootMargin: "-15% 0px -70% 0px", threshold: 0 });
-document.querySelectorAll(".week-section").forEach(s => sectionHighlightObserver.observe(s));
+
+function observeCurrentWeekSections() {
+  document.querySelectorAll(".week-section").forEach(s => sectionHighlightObserver.observe(s));
+}
+observeCurrentWeekSections();
 
 updateCountdown();
 setInterval(updateCountdown, 1000);
@@ -345,7 +459,17 @@ if (todayCard) {
 }
 
 // ── Scroll-reveal animations ──
-(function initRevealObserver() {
+const revealed = new WeakSet();
+let revealObserver = null;
+
+function revealEl(el) {
+  if (revealed.has(el)) return;
+  revealed.add(el);
+  el.classList.remove("reveal-ready");
+  el.classList.add("revealed");
+}
+
+function applyRevealToCurrentDOM() {
   const weekTitles = document.querySelectorAll(".week-title");
   const dayCards   = document.querySelectorAll(".day-card");
 
@@ -359,41 +483,36 @@ if (todayCard) {
   weekTitles.forEach(el => el.classList.add("reveal-ready"));
   dayCards.forEach(el => el.classList.add("reveal-ready"));
 
-  const revealed = new WeakSet();
-
-  function revealEl(el) {
-    if (revealed.has(el)) return;
-    revealed.add(el);
-    el.classList.remove("reveal-ready");
-    el.classList.add("revealed");
-  }
-
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        revealEl(entry.target);
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.08, rootMargin: "0px 0px -40px 0px" });
-
-  weekTitles.forEach(el => observer.observe(el));
-  dayCards.forEach(el => observer.observe(el));
-
-  document.getElementById("filterBar").addEventListener("click", () => {
-    requestAnimationFrame(() => {
-      document.querySelectorAll(".day-card:not(.hidden), .week-title").forEach(el => {
-        const rect = el.getBoundingClientRect();
-        if (rect.top < window.innerHeight && rect.bottom > 0 && !revealed.has(el)) {
-          revealEl(el);
+  if (!revealObserver) {
+    revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          revealEl(entry.target);
+          revealObserver.unobserve(entry.target);
         }
       });
-    });
-  });
+    }, { threshold: 0.08, rootMargin: "0px 0px -40px 0px" });
+  }
+
+  weekTitles.forEach(el => revealObserver.observe(el));
+  dayCards.forEach(el => revealObserver.observe(el));
 
   const todayCardEl = document.querySelector(".day-card.today");
   if (todayCardEl) setTimeout(() => revealEl(todayCardEl), 350);
-})();
+}
+
+applyRevealToCurrentDOM();
+
+document.getElementById("filterBar").addEventListener("click", () => {
+  requestAnimationFrame(() => {
+    document.querySelectorAll(".day-card:not(.hidden), .week-title").forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0 && !revealed.has(el)) {
+        revealEl(el);
+      }
+    });
+  });
+});
 
 // ── Contador de visitas + toggle Instagram ──
 const visitBubble = document.getElementById("visit-bubble");
@@ -440,6 +559,11 @@ visitBubble.addEventListener("click", () => {
   }, 200);
 });
 
+// ── Contador oculto (consultado sob demanda via API) ──
+if (!isDev) {
+  fetch("https://abacus.jasoncameron.dev/hit/sj26/pageviews", { keepalive: true }).catch(() => {});
+}
+
 // ── Rastrear cliques no Instagram (apenas cliques reais) ──
 function trackInstagramClick() {
   if (isDev) return;
@@ -459,40 +583,143 @@ document.querySelectorAll('a[href*="instagram.com/marcosjrgm"]').forEach(link =>
   link.addEventListener("click", trackInstagramClick);
 });
 
-// ── Pop-up de contato ──
-const CONTACT_KEY = "sj26_contact_dismissed";
-const contactPopup = document.getElementById("contact-popup");
+// ── Bolinha de contato ──
 const contactBubble = document.getElementById("contact-bubble");
-const contactClose = document.getElementById("contact-popup-close");
-
 contactBubble.textContent = "📞";
-
 contactBubble.addEventListener("click", () => {
   trackInstagramClick();
   window.open("https://www.instagram.com/marcosjrgm/", "_blank", "noopener,noreferrer");
 });
+setTimeout(() => contactBubble.classList.add("visible"), 400);
 
-function showContactBubble() {
-  contactBubble.classList.add("visible");
+// ── Festival toggle ──
+const festivalToggle = document.getElementById("festival-toggle");
+const festivalCurtain = document.getElementById("festival-curtain");
+const festivalBonfire = document.getElementById("festival-bonfire");
+const bonfireSparks = festivalBonfire.querySelector(".bonfire-sparks");
+const curtainFlagsContainer = festivalCurtain.querySelector(".curtain-flags");
+
+for (let i = 0; i < 18; i++) {
+  const s = document.createElement("span");
+  s.className = "spark";
+  s.style.setProperty("--sx", (Math.random() * 100).toFixed(1) + "%");
+  s.style.setProperty("--sd", (0.8 + Math.random() * 0.8).toFixed(2) + "s");
+  s.style.setProperty("--sdelay", (Math.random() * 0.5).toFixed(2) + "s");
+  bonfireSparks.appendChild(s);
+}
+const festivalTitleEl = document.getElementById("festival-title");
+const festivalSubtitleEl = document.getElementById("festival-subtitle");
+
+const CURTAIN_FLAG_COUNT = 22;
+for (let i = 0; i < CURTAIN_FLAG_COUNT; i++) {
+  const f = document.createElement("span");
+  f.className = "curtain-flag";
+  f.style.setProperty("--i", i);
+  curtainFlagsContainer.appendChild(f);
 }
 
-function dismissPopup() {
-  contactPopup.classList.remove("visible");
-  contactPopup.classList.add("collapsing");
-  contactPopup.addEventListener("transitionend", () => {
-    contactPopup.style.display = "none";
-    showContactBubble();
-  }, { once: true });
-  localStorage.setItem(CONTACT_KEY, "1");
+const festivalPopup = document.getElementById("festival-popup");
+const festivalPopupName = document.getElementById("festival-popup-name");
+const festivalPopupClose = document.getElementById("festival-popup-close");
+
+function applyFestivalToDOM() {
+  const festival = getCurrentFestival();
+  const other = getOtherFestival();
+
+  document.body.classList.remove(...Object.values(FESTIVALS).map(f => f.theme));
+  document.body.classList.add(festival.theme);
+
+  festivalTitleEl.textContent = festival.name;
+  festivalSubtitleEl.textContent = festival.subtitle;
+  document.title = `${festival.name} — Programação`;
+
+  festivalToggle.innerHTML = other.icon;
+  festivalToggle.title = `Ir para ${other.name}`;
+  festivalToggle.setAttribute("aria-label", `Ir para ${other.name}`);
+  festivalPopupName.textContent = other.name;
+
+  filterBarEl.classList.toggle("is-hidden", festival.weeks.length === 0);
+
+  renderSchedule();
+  observeCurrentWeekSections();
+  applyRevealToCurrentDOM();
+  updateCountdown();
+
+  const allBtn = weekBtns["all"];
+  if (allBtn) {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    allBtn.classList.add("active");
+    autoHighlightActive = true;
+    requestAnimationFrame(() => moveIndicatorToBtn(allBtn));
+  }
 }
 
-contactClose.addEventListener("click", dismissPopup);
+let switching = false;
 
-if (localStorage.getItem(CONTACT_KEY)) {
-  contactPopup.style.display = "none";
-  showContactBubble();
-} else {
+function runCurtainTransition(swapFn) {
+  festivalCurtain.classList.add("dropping");
   setTimeout(() => {
-    contactPopup.classList.add("visible");
-  }, 1000);
+    swapFn();
+    festivalCurtain.classList.remove("dropping");
+    festivalCurtain.classList.add("rising");
+    setTimeout(() => {
+      festivalCurtain.classList.remove("rising");
+      switching = false;
+    }, 700);
+  }, 700);
 }
+
+function runBonfireTransition(swapFn) {
+  festivalBonfire.classList.add("igniting");
+  setTimeout(() => {
+    swapFn();
+    festivalBonfire.classList.remove("igniting");
+    festivalBonfire.classList.add("fading");
+    setTimeout(() => {
+      festivalBonfire.classList.remove("fading");
+      switching = false;
+    }, 700);
+  }, 800);
+}
+
+function switchFestival() {
+  if (switching) return;
+  switching = true;
+
+  const goingToForroCaju = currentFestivalId === "arraia-do-povo";
+
+  const swap = () => {
+    currentFestivalId = getOtherFestival().id;
+    localStorage.setItem(ACTIVE_FESTIVAL_KEY, currentFestivalId);
+    applyFestivalToDOM();
+    window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+  };
+
+  if (goingToForroCaju) {
+    runCurtainTransition(swap);
+  } else {
+    runBonfireTransition(swap);
+  }
+}
+
+function hideFestivalPopup() {
+  festivalPopup.classList.remove("visible");
+  festivalPopup.classList.add("collapsing");
+}
+
+festivalToggle.addEventListener("click", () => {
+  hideFestivalPopup();
+  switchFestival();
+});
+festivalToggle.addEventListener("keydown", e => {
+  if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    hideFestivalPopup();
+    switchFestival();
+  }
+});
+festivalPopupClose.addEventListener("click", hideFestivalPopup);
+
+applyFestivalToDOM();
+setTimeout(() => festivalToggle.classList.add("visible"), 400);
+setTimeout(() => festivalPopup.classList.add("visible"), 1000);
