@@ -41,7 +41,15 @@
   Desenvolvido por <a href="https://www.instagram.com/marcosjrgm/" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none;font-weight:600;">@marcosjrgm</a>
 </footer>
 
-<div id="visit-bubble" class="visit-bubble" aria-hidden="true"></div>
+<div id="map-button" class="map-button" role="button" tabindex="0" title="Mapa do evento" aria-label="Mapa do evento"></div>
+
+<div id="map-popup" class="map-popup" role="dialog" aria-label="Mapa do evento">
+  <button class="map-popup__close" id="map-popup-close" aria-label="Fechar">×</button>
+  <p class="map-popup__text">
+    Em breve: Mapa 3D do
+    <span class="map-popup__name" id="map-popup-name">evento</span>
+  </p>
+</div>
 
 <div id="contact-bubble" class="contact-bubble" title="Sugestões? Fale comigo!" aria-label="Contato"></div>
 

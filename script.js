@@ -322,69 +322,50 @@ document.getElementById("filterBar").addEventListener("click", () => {
   });
 });
 
-// ── Contador de visitas + toggle Instagram ──
-const visitBubble = document.getElementById("visit-bubble");
-const IG_CACHE = "sj26_ig_count";
+// ── Contadores ocultos (consultados sob demanda via API) ──
 const isDev = ["localhost", "127.0.0.1", ""].includes(location.hostname);
-let visitText = "";
-let igMode = false;
-let igCount = parseInt(localStorage.getItem(IG_CACHE)) || 0;
 
 if (!isDev) {
-  fetch("https://api.counterapi.dev/v1/sj26/visits/up")
-    .then(r => r.json())
-    .then(({ count }) => {
-      if (count == null) return;
-      visitText = count > 9999 ? "9k+" : count.toLocaleString("pt-BR");
-      visitBubble.textContent = visitText;
-      visitBubble.title = "clique em mim";
-      visitBubble.style.opacity = "0.75";
-      visitBubble.style.pointerEvents = "auto";
-    })
-    .catch(() => {});
-} else {
-  visitText = "DEV";
-  visitBubble.textContent = visitText;
-  visitBubble.title = "clique em mim";
-  visitBubble.style.opacity = "0.75";
-  visitBubble.style.pointerEvents = "auto";
-}
-
-visitBubble.addEventListener("click", () => {
-  visitBubble.classList.add("flip-out");
-  setTimeout(() => {
-    igMode = !igMode;
-    if (igMode) {
-      visitBubble.classList.add("instagram-mode");
-      visitBubble.title = "@ ·";
-      visitBubble.textContent = igCount.toLocaleString("pt-BR");
-    } else {
-      visitBubble.classList.remove("instagram-mode");
-      visitBubble.title = "clique em mim";
-      visitBubble.textContent = visitText;
-    }
-    visitBubble.classList.remove("flip-out");
-  }, 200);
-});
-
-// ── Contador oculto (consultado sob demanda via API) ──
-if (!isDev) {
+  fetch("https://api.counterapi.dev/v1/sj26/visits/up", { keepalive: true }).catch(() => {});
   fetch("https://abacus.jasoncameron.dev/hit/sj26/pageviews", { keepalive: true }).catch(() => {});
 }
 
 // ── Rastrear cliques no Instagram (apenas cliques reais) ──
 function trackInstagramClick() {
   if (isDev) return;
-  fetch("https://api.counterapi.dev/v1/sj26/instagram/up", { keepalive: true })
-    .then(r => r.json())
-    .then(({ count }) => {
-      if (count == null) return;
-      igCount = count;
-      localStorage.setItem(IG_CACHE, igCount);
-      if (igMode) visitBubble.textContent = igCount.toLocaleString("pt-BR");
-    })
-    .catch(() => {});
+  fetch("https://api.counterapi.dev/v1/sj26/instagram/up", { keepalive: true }).catch(() => {});
 }
+
+// ── Botão do mapa do evento ──
+const mapButton = document.getElementById("map-button");
+const mapPopup = document.getElementById("map-popup");
+const mapPopupClose = document.getElementById("map-popup-close");
+
+mapButton.innerHTML = `<svg class="map-button__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M9 3 3 5.5v15L9 18l6 3 6-2.5v-15L15 6 9 3z"/>
+  <path d="M9 3v15"/>
+  <path d="M15 6v15"/>
+</svg>`;
+
+function showMapPopup() {
+  mapPopup.classList.remove("collapsing");
+  mapPopup.classList.add("visible");
+}
+function hideMapPopup() {
+  mapPopup.classList.remove("visible");
+  mapPopup.classList.add("collapsing");
+}
+
+mapButton.addEventListener("click", showMapPopup);
+mapButton.addEventListener("keydown", e => {
+  if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    showMapPopup();
+  }
+});
+mapPopupClose.addEventListener("click", hideMapPopup);
+
+setTimeout(() => mapButton.classList.add("visible"), 400);
 
 // Todos os links <a> do Instagram (popup, header, rodapé)
 document.querySelectorAll('a[href*="instagram.com/marcosjrgm"]').forEach(link => {
@@ -429,6 +410,7 @@ for (let i = 0; i < CURTAIN_FLAG_COUNT; i++) {
 const festivalPopup = document.getElementById("festival-popup");
 const festivalPopupName = document.getElementById("festival-popup-name");
 const festivalPopupClose = document.getElementById("festival-popup-close");
+const mapPopupName = document.getElementById("map-popup-name");
 
 function applyFestivalToDOM() {
   const festival = getCurrentFestival();
@@ -445,6 +427,7 @@ function applyFestivalToDOM() {
   festivalToggle.title = `Ir para ${other.name}`;
   festivalToggle.setAttribute("aria-label", `Ir para ${other.name}`);
   festivalPopupName.textContent = other.name;
+  mapPopupName.textContent = festival.name;
 
   filterBarEl.classList.toggle("is-hidden", festival.weeks.length === 0);
 
