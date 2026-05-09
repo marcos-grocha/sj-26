@@ -372,14 +372,41 @@ document.querySelectorAll('a[href*="instagram.com/marcosjrgm"]').forEach(link =>
   link.addEventListener("click", trackInstagramClick);
 });
 
-// ── Bolinha de contato ──
-const contactBubble = document.getElementById("contact-bubble");
-contactBubble.textContent = "📞";
-contactBubble.addEventListener("click", () => {
-  trackInstagramClick();
-  window.open("https://www.instagram.com/marcosjrgm/", "_blank", "noopener,noreferrer");
+// ── Toggle de tema (claro/escuro) ──
+const THEME_MODE_KEY = "sj26_theme_mode";
+const themeToggle = document.getElementById("theme-toggle");
+
+const ICON_MOON = `<svg class="theme-toggle__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>`;
+const ICON_SUN = `<svg class="theme-toggle__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <circle cx="12" cy="12" r="4"/>
+  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+</svg>`;
+
+function applyThemeMode(mode) {
+  document.documentElement.classList.remove("pre-light");
+  document.body.classList.toggle("light-mode", mode === "light");
+  themeToggle.innerHTML = mode === "light" ? ICON_SUN : ICON_MOON;
+  themeToggle.setAttribute("aria-pressed", mode === "light" ? "true" : "false");
+}
+
+const savedThemeMode = localStorage.getItem(THEME_MODE_KEY) === "light" ? "light" : "dark";
+applyThemeMode(savedThemeMode);
+
+themeToggle.addEventListener("click", () => {
+  const next = document.body.classList.contains("light-mode") ? "dark" : "light";
+  localStorage.setItem(THEME_MODE_KEY, next);
+  applyThemeMode(next);
 });
-setTimeout(() => contactBubble.classList.add("visible"), 400);
+themeToggle.addEventListener("keydown", e => {
+  if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    themeToggle.click();
+  }
+});
+
+setTimeout(() => themeToggle.classList.add("visible"), 400);
 
 // ── Festival toggle ──
 const festivalToggle = document.getElementById("festival-toggle");

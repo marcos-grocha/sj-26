@@ -4,6 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>São João Aracaju 2026 — Programação</title>
+  <script>
+    // Anti-FOUC: marca <html> antes do CSS aplicar (body ainda não existe aqui)
+    if (localStorage.getItem('sj26_theme_mode') === 'light') {
+      document.documentElement.classList.add('pre-light');
+    }
+  </script>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="theme-arraia">
@@ -51,7 +57,7 @@
   </p>
 </div>
 
-<div id="contact-bubble" class="contact-bubble" title="Sugestões? Fale comigo!" aria-label="Contato"></div>
+<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Alternar tema claro/escuro" title="Alternar tema"></button>
 
 <div id="festival-toggle" class="festival-toggle" role="button" tabindex="0" aria-label="Alternar festa"></div>
 
