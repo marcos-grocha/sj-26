@@ -10,7 +10,14 @@
   --gold: #e8a020;
   --text: #f0f0f0;
   --muted: #888;
+  --location-text: #aaa;
   --tag-bg: #2a2a2a;
+  --bg-elevated: #1e0605;
+  --header-bg: rgba(10, 8, 4, 0.97);
+  --glow-warm: rgba(232, 160, 32, 0.18);
+  --title-highlight: #fff0c0;
+  --card-hover-border: #3e3e3e;
+  --shadow-color: rgba(0, 0, 0, 0.35);
   --radius: 12px;
   --theme-transition: background 0.6s ease, border-color 0.6s ease, color 0.6s ease;
 }
@@ -25,6 +32,58 @@ body.theme-forro-caju {
   --accent: #1e8a5a;
   --accent2: #0f4a31; /* #1e60a0; */
   --gold: #e8a020;
+}
+
+/* Anti-FOUC: html.pre-light é aplicado pelo script inline no <head> antes do body parsear */
+html.pre-light body,
+body.light-mode {
+  --bg: #f5ecd7;
+  --surface: #fbf3df;
+  --surface2: #f0e2c2;
+  --bg-elevated: #ead8b3;
+  --border: #d8c69a;
+  --card-hover-border: #b89a5e;
+  --text: #2a1f10;
+  --muted: #6b5a3e;
+  --location-text: #7a6a4e;
+  --tag-bg: #ede0bf;
+  --header-bg: rgba(248, 240, 218, 0.94);
+  --glow-warm: rgba(200, 140, 40, 0.18);
+  --title-highlight: #6e3a14;
+  --shadow-color: rgba(80, 50, 10, 0.12);
+}
+
+html.pre-light body.theme-arraia,
+body.light-mode.theme-arraia    { --accent: #b32a20; }
+
+html.pre-light body.theme-forro-caju,
+body.light-mode.theme-forro-caju { --accent: #157046; }
+
+/* Tag dourada perde contraste sobre creme — escurece e reforça fundo */
+html.pre-light .artist-tag.star,
+body.light-mode .artist-tag.star {
+  color: #8a5a10;
+  border-color: rgba(200, 140, 40, 0.55);
+  background: rgba(200, 140, 40, 0.15);
+}
+
+/* Tag Brasil: gradient com 18% de alpha desaparece sobre creme.
+   Solidifica o gradient para destacar o amarelo da camisa. */
+html.pre-light .artist-tag.brasil,
+body.light-mode .artist-tag.brasil {
+  background: linear-gradient(135deg, rgba(0, 156, 59, 0.85) 0%, rgba(0, 39, 118, 0.85) 100%);
+  border-color: rgba(0, 39, 118, 0.7);
+  box-shadow: 0 0 8px rgba(0, 156, 59, 0.4);
+}
+
+/* Cena noturna: re-declara tokens escuros para não vazar do light-mode */
+#festival-curtain,
+#festival-bonfire {
+  --bg: #0f0f0f;
+  --surface: #1a1a1a;
+  --surface2: #222;
+  --border: #2e2e2e;
+  --text: #f0f0f0;
 }
 
 body { transition: background 0.6s ease; }
@@ -68,10 +127,10 @@ body {
 /* ── HEADER ── */
 header {
   text-align: center;
-  border-bottom: 1px solid rgba(232,160,32,0.18);
+  border-bottom: 1px solid var(--glow-warm);
   position: sticky;
   top: 0;
-  background: rgba(10,8,4,0.97);
+  background: var(--header-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   z-index: 100;
@@ -197,7 +256,7 @@ header h1 {
   letter-spacing: -0.02em;
   line-height: 1.1;
   background: linear-gradient(110deg,
-    var(--accent) 0%, var(--gold) 35%, #fff0c0 50%, var(--gold) 65%, var(--accent) 100%
+    var(--accent) 0%, var(--gold) 35%, var(--title-highlight) 50%, var(--gold) 65%, var(--accent) 100%
   );
   background-size: 250% 100%;
   -webkit-background-clip: text;
@@ -428,7 +487,7 @@ main {
 
 .day-location__text {
   font-size: 0.78rem;
-  color: #aaa;
+  color: var(--location-text);
   letter-spacing: 0.02em;
 }
 
@@ -466,13 +525,13 @@ main {
 }
 
 .day-card:hover {
-  border-color: #3e3e3e;
+  border-color: var(--card-hover-border);
   transform: translateY(-1px);
 }
 
 .day-card.today {
   border-color: var(--accent);
-  background: #1e0605;
+  background: var(--bg-elevated);
 }
 
 .day-card.special {
@@ -582,7 +641,7 @@ main {
 
 .palco360-artist {
   font-size: 0.78rem;
-  color: #aaa;
+  color: var(--location-text);
 }
 
 /* TODAY badge */
@@ -647,7 +706,7 @@ footer {
 .map-button__icon {
   width: 1.5rem;
   height: 1.5rem;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.35));
+  filter: drop-shadow(0 1px 2px var(--shadow-color));
 }
 
 .map-popup {
@@ -732,8 +791,8 @@ footer {
   }
 }
 
-/* ── BOLINHA DE CONTATO ── */
-.contact-bubble {
+/* ── TOGGLE DE TEMA (CLARO/ESCURO) ── */
+.theme-toggle {
   position: fixed;
   bottom: 5.2rem;
   right: 1.5rem;
@@ -744,7 +803,6 @@ footer {
   background: var(--surface);
   border: 1.5px solid var(--accent);
   color: var(--accent);
-  font-size: 1.1rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -752,16 +810,32 @@ footer {
   opacity: 0;
   transform: scale(0);
   transform-origin: bottom right;
-  transition: opacity 0.3s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: opacity 0.3s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+              border-color 0.5s, background 0.5s, color 0.5s;
   pointer-events: none;
+  padding: 0;
   line-height: 1;
+  user-select: none;
 }
-.contact-bubble.visible {
-  opacity: 0.85;
+.theme-toggle.visible {
+  opacity: 0.9;
   transform: scale(1);
   pointer-events: auto;
 }
-.contact-bubble:hover { opacity: 1 !important; }
+.theme-toggle:hover { opacity: 1 !important; transform: scale(1.08); }
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+.theme-toggle__icon {
+  width: 1.4rem;
+  height: 1.4rem;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 1px 2px var(--shadow-color));
+}
+.theme-toggle:hover .theme-toggle__icon {
+  transform: rotate(20deg);
+}
 
 /* ── POP-UP DO FESTIVAL TOGGLE ── */
 .festival-popup {
