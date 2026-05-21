@@ -406,7 +406,9 @@ header.scrolled .countdown-wrap {
   flex-wrap: nowrap;
   overflow-x: auto;
   scrollbar-width: none;
-  padding: 1rem 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem 1rem;
   border-bottom: 1px solid var(--border);
   animation: filterSlideUp 0.5s 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -451,13 +453,15 @@ header.scrolled .countdown-wrap {
   position: relative;
   display: flex;
   align-items: center;
-  padding: 0.85rem 1.5rem 0.25rem;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0.85rem 1rem 0.25rem;
   animation: filterSlideUp 0.5s 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .search-bar__icon {
   position: absolute;
-  left: 2.1rem;
+  left: 1.6rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -496,7 +500,7 @@ header.scrolled .countdown-wrap {
 
 .search-bar__clear {
   position: absolute;
-  right: 2.1rem;
+  right: 1.6rem;
   display: none;
   align-items: center;
   justify-content: center;
