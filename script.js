@@ -73,6 +73,7 @@ function renderSchedule() {
         (day.special ? " special" : "");
       card.dataset.week = week.id;
 
+      card.dataset.date = day.date;
       card.innerHTML = `
         <div class="day-date">
           <div class="day-num">${dayNum(day.date)}</div>
@@ -84,18 +85,18 @@ function renderSchedule() {
           ${day.special ? `<span class="day-badge">${day.special}</span>` : ""}
           <div class="day-artists">
             ${day.artists.map((a, i) =>
-              `<span class="artist-tag${day.highlights && day.highlights.includes(a) ? " star" : ""}${day.worldcupHighlights && day.worldcupHighlights.includes(a) ? " brasil" : ""}">${a}</span>`
+              `<span class="artist-tag${day.highlights && day.highlights.includes(a) ? " star" : ""}${day.worldcupHighlights && day.worldcupHighlights.includes(a) ? " brasil" : ""}" data-artist="${a.replace(/"/g, '&quot;')}">${a}</span>`
             ).join("")}
           </div>
           ${day.p360 ? `
           <div class="palco360">
             <span class="palco360-label">Palco 360°</span>
-            <span class="palco360-artist">${day.p360}</span>
+            <span class="palco360-artist" data-artist="${day.p360.replace(/"/g, '&quot;')}">${day.p360}</span>
           </div>` : ""}
           ${day.location ? `
           <div class="day-location">
             <span class="day-location__pin" aria-hidden="true">📍</span>
-            <span class="day-location__text">${day.location}</span>
+            <span class="day-location__text" data-location="${day.location.replace(/"/g, '&quot;')}">${day.location}</span>
           </div>` : ""}
         </div>
       `;
@@ -145,10 +146,137 @@ function renderFilterButtons() {
   filterBar.querySelectorAll(".filter-btn").forEach(b => { weekBtns[b.dataset.week] = b; });
 }
 
+// ── Search state ──
+let currentSearchQuery = "";
+let pendingSearchAfterSwitch = null;
+const searchBarEl = document.getElementById("searchBar");
+const searchInputEl = document.getElementById("searchInput");
+const searchClearEl = document.getElementById("searchClear");
+
+function normalizeText(str) {
+  return (str || "")
+    .toString()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .trim();
+}
+
+function dayMatchesQuery(day, q) {
+  if (!q) return true;
+  if (day.artists && day.artists.some(a => normalizeText(a).includes(q))) return true;
+  if (day.p360 && normalizeText(day.p360).includes(q)) return true;
+  if (day.location && normalizeText(day.location).includes(q)) return true;
+  return false;
+}
+
+function hasMatchInFestival(festival, q) {
+  if (!q || !festival || !festival.weeks) return false;
+  return festival.weeks.some(week => week.days.some(d => dayMatchesQuery(d, q)));
+}
+
+function clearSearchState({ refocus = false } = {}) {
+  if (searchInputEl.value === "" && currentSearchQuery === "") return;
+  searchInputEl.value = "";
+  currentSearchQuery = "";
+  searchBarEl.classList.remove("has-query");
+  applySearch();
+  if (refocus) searchInputEl.focus();
+}
+
+function renderSearchEmpty(container, q, originalQuery) {
+  const other = getOtherFestival();
+  const otherHasMatch = hasMatchInFestival(other, q);
+  const safeQuery = originalQuery.replace(/[<>&"']/g, c => ({
+    "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+
+  const empty = document.createElement("div");
+  empty.className = "search-empty";
+  empty.innerHTML = `
+    <p class="search-empty__title">Nenhum artista encontrado para <strong>"${safeQuery}"</strong></p>
+    <p class="search-empty__hint">${otherHasMatch
+      ? `Mas tem resultado no ${other.name}.`
+      : "Tente outro nome ou confira a programação completa."}</p>
+    <div class="search-empty__actions">
+      <button type="button" class="search-empty__btn" data-action="clear">Limpar busca</button>
+      ${otherHasMatch ? `<button type="button" class="search-empty__btn primary" data-action="switch">Ver no ${other.name}</button>` : ""}
+    </div>
+  `;
+  container.appendChild(empty);
+
+  empty.querySelector('[data-action="clear"]').addEventListener("click", () => {
+    clearSearchState({ refocus: true });
+  });
+  const switchBtn = empty.querySelector('[data-action="switch"]');
+  if (switchBtn) {
+    switchBtn.addEventListener("click", () => {
+      pendingSearchAfterSwitch = searchInputEl.value;
+      switchFestival();
+    });
+  }
+}
+
+function applySearch() {
+  const q = currentSearchQuery;
+  const container = document.getElementById("schedule");
+  const existingEmpty = container.querySelector(".search-empty");
+  if (existingEmpty) existingEmpty.remove();
+
+  // Limpa destaques antigos
+  container.querySelectorAll(".search-match").forEach(el => el.classList.remove("search-match"));
+
+  if (!q) {
+    container.querySelectorAll(".day-card.search-hidden").forEach(el => el.classList.remove("search-hidden"));
+    container.querySelectorAll(".week-section.search-hidden").forEach(el => el.classList.remove("search-hidden"));
+    return;
+  }
+
+  // Acessa dados do festival ativo
+  const festival = getCurrentFestival();
+  const dayByDate = new Map();
+  festival.weeks.forEach(w => w.days.forEach(d => dayByDate.set(d.date, d)));
+
+  let totalVisible = 0;
+
+  container.querySelectorAll(".week-section").forEach(section => {
+    let weekHasMatch = false;
+    section.querySelectorAll(".day-card").forEach(card => {
+      const day = dayByDate.get(card.dataset.date);
+      const matches = day && dayMatchesQuery(day, q);
+      card.classList.toggle("search-hidden", !matches);
+      if (!matches) return;
+      weekHasMatch = true;
+      totalVisible++;
+      // Destaca campos que casaram
+      card.querySelectorAll(".artist-tag[data-artist]").forEach(tag => {
+        if (normalizeText(tag.dataset.artist).includes(q)) tag.classList.add("search-match");
+      });
+      const p360El = card.querySelector(".palco360-artist[data-artist]");
+      if (p360El && normalizeText(p360El.dataset.artist).includes(q)) p360El.classList.add("search-match");
+      const locEl = card.querySelector(".day-location__text[data-location]");
+      if (locEl && normalizeText(locEl.dataset.location).includes(q)) locEl.classList.add("search-match");
+    });
+    section.classList.toggle("search-hidden", !weekHasMatch);
+  });
+
+  if (totalVisible === 0) {
+    renderSearchEmpty(container, q, searchInputEl.value.trim());
+  }
+}
+
 // ── Filter ──
 document.getElementById("filterBar").addEventListener("click", e => {
   const btn = e.target.closest(".filter-btn");
   if (!btn) return;
+
+  // Clique manual em filtro de semana limpa busca ativa
+  if (currentSearchQuery) {
+    searchInputEl.value = "";
+    currentSearchQuery = "";
+    searchBarEl.classList.remove("has-query");
+    applySearch();
+  }
 
   document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
   btn.classList.add("active");
@@ -159,6 +287,38 @@ document.getElementById("filterBar").addEventListener("click", e => {
   document.querySelectorAll(".week-section").forEach(s => {
     s.style.display = (week === "all" || s.dataset.week === week) ? "" : "none";
   });
+});
+
+// ── Search input listeners ──
+searchInputEl.addEventListener("input", () => {
+  const raw = searchInputEl.value;
+  currentSearchQuery = normalizeText(raw);
+  searchBarEl.classList.toggle("has-query", raw.length > 0);
+
+  if (currentSearchQuery) {
+    // Volta filtro de semana para "Tudo" sem disparar o handler de clique
+    const allBtn = weekBtns["all"];
+    if (allBtn && !allBtn.classList.contains("active")) {
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      allBtn.classList.add("active");
+      moveIndicatorToBtn(allBtn);
+    }
+    document.querySelectorAll(".week-section").forEach(s => { s.style.display = ""; });
+    autoHighlightActive = false;
+  } else {
+    autoHighlightActive = true;
+  }
+
+  applySearch();
+});
+
+searchClearEl.addEventListener("click", () => clearSearchState({ refocus: true }));
+
+searchInputEl.addEventListener("keydown", e => {
+  if (e.key === "Escape" && searchInputEl.value) {
+    e.preventDefault();
+    clearSearchState({ refocus: true });
+  }
 });
 
 // ── Countdown ──
@@ -469,6 +629,25 @@ function applyFestivalToDOM() {
     allBtn.classList.add("active");
     autoHighlightActive = true;
     requestAnimationFrame(() => moveIndicatorToBtn(allBtn));
+  }
+
+  // Reaplica busca preservada (vindo de "Ver no outro festival") ou limpa estado
+  if (pendingSearchAfterSwitch != null) {
+    const raw = pendingSearchAfterSwitch;
+    pendingSearchAfterSwitch = null;
+    if (searchInputEl) {
+      searchInputEl.value = raw;
+      currentSearchQuery = normalizeText(raw);
+      searchBarEl.classList.toggle("has-query", raw.length > 0);
+      if (currentSearchQuery) {
+        autoHighlightActive = false;
+        applySearch();
+      }
+    }
+  } else if (searchInputEl && (searchInputEl.value || currentSearchQuery)) {
+    searchInputEl.value = "";
+    currentSearchQuery = "";
+    searchBarEl.classList.remove("has-query");
   }
 }
 

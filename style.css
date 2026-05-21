@@ -446,6 +446,146 @@ header.scrolled .countdown-wrap {
   font-weight: 600;
 }
 
+/* ── SEARCH BAR ── */
+.search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0.85rem 1.5rem 0.25rem;
+  animation: filterSlideUp 0.5s 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.search-bar__icon {
+  position: absolute;
+  left: 2.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  pointer-events: none;
+  transition: color 0.2s;
+}
+.search-bar__icon svg { width: 1rem; height: 1rem; }
+
+.search-bar__input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 2.4rem 0.5rem 2.4rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.88rem;
+  line-height: 1.2;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.search-bar__input::placeholder { color: var(--muted); opacity: 0.85; }
+.search-bar__input::-webkit-search-cancel-button,
+.search-bar__input::-webkit-search-decoration { -webkit-appearance: none; appearance: none; }
+
+.search-bar__input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+.search-bar__input:focus + .search-bar__icon,
+.search-bar:focus-within .search-bar__icon { color: var(--accent); }
+
+.search-bar__clear {
+  position: absolute;
+  right: 2.1rem;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border: none;
+  border-radius: 50%;
+  background: var(--tag-bg);
+  color: var(--muted);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s, color 0.15s, transform 0.15s;
+}
+.search-bar__clear svg { width: 0.8rem; height: 0.8rem; }
+.search-bar__clear:hover { background: var(--accent); color: #fff; transform: scale(1.05); }
+.search-bar__clear:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.search-bar.has-query .search-bar__clear { display: inline-flex; }
+
+/* Destaque de matches da busca */
+.artist-tag.search-match,
+.palco360-artist.search-match,
+.day-location__text.search-match {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+.palco360-artist.search-match,
+.day-location__text.search-match {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Esconder seção da semana quando não tem nenhum dia visível */
+.week-section.search-hidden { display: none; }
+.day-card.search-hidden { display: none; }
+
+/* Estado vazio da busca */
+.search-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--muted);
+}
+.search-empty__title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.35rem;
+}
+.search-empty__title strong {
+  color: var(--accent);
+  font-weight: 700;
+}
+.search-empty__hint {
+  font-size: 0.85rem;
+  margin-bottom: 1.2rem;
+}
+.search-empty__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+}
+.search-empty__btn {
+  font-family: inherit;
+  font-size: 0.82rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s, transform 0.15s;
+}
+.search-empty__btn:hover { border-color: var(--accent); color: var(--accent); }
+.search-empty__btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+.search-empty__btn.primary:hover { background: var(--accent2); border-color: var(--accent2); color: #fff; transform: translateY(-1px); }
+
+@media (max-width: 480px) {
+  .search-bar { padding: 0.7rem 1rem 0.2rem; }
+  .search-bar__icon { left: 1.6rem; }
+  .search-bar__clear { right: 1.6rem; }
+}
+
 /* ── MAIN LAYOUT ── */
 main {
   max-width: 900px;
