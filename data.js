@@ -32,7 +32,7 @@ const ARRAIA_WEEKS = [
         artists: ["As Patricinhas", "Cavalo de Pau", "Gustavo Mioto"],
         highlights: [],
         p360: "Jan Vaqueiro" },
-      { date: "2026-06-04", weekday: "Qui", month: "Jun", special: null,
+      { date: "2026-06-04", weekday: "Qui", month: "Jun", special: "Corpus Christi",
         artists: ["Jeanny Lins", "Walkyria Santos", "Ana Castela"],
         highlights: ["Ana Castela"],
         p360: "Alê Ferraz" },
@@ -156,7 +156,7 @@ const FORRO_CAJU_WEEKS = [
     title: "Semana 2 · Início de Junho",
     filterLabel: "Semana: 2 · Início de Junho",
     days: [
-      { date: "2026-06-04", weekday: "Qui", month: "Jun", special: null,
+      { date: "2026-06-04", weekday: "Qui", month: "Jun", special: "Corpus Christi",
         artists: ["Casaca de Couro", "Trio Nordestino", "Fulô de Mandacaru", "Alceu Valença", "João da Passárada"],
         highlights: ["Alceu Valença"],
         location: "Augusto Franco" },
