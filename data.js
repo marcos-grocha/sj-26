@@ -324,3 +324,42 @@ const FESTIVALS = {
     weeks: FORRO_CAJU_WEEKS,
   },
 };
+
+// ── São João de Areia Branca (cidade vizinha · evento bônus) ──
+const AREIA_BRANCA_ICON = `<img class="areia-logo-img" src="assets/areia-branca-logo.png" alt="São João de Areia Branca" />`;
+
+const AREIA_BRANCA = {
+  id: "areia-branca",
+  name: "São João de Areia Branca",
+  subtitle: "Onde o forró começa!",
+  tagline: "Cidade vizinha · evento bônus",
+  icon: AREIA_BRANCA_ICON,
+  days: [
+    {
+      date: "2026-05-30", weekday: "Sáb", month: "Maio",
+      lineup: [
+        { time: "20h30", artist: "Nineia Oliveira" },
+        { time: "21h30", artist: "Luan Estilizado" },
+        { time: "23h00", artist: "Polyama Lins" },
+        { time: "00h00", artist: "Zé Vaqueiro" },
+        { time: "01h30", artist: "Vitor Santos" },
+        { time: "03h00", artist: "Henry Freitas" },
+        { time: "04h30", artist: "Mikael Santos" },
+      ],
+      highlights: ["Zé Vaqueiro", "Luan Estilizado", "Henry Freitas", "Mikael Santos"],
+    },
+    {
+      date: "2026-05-31", weekday: "Dom", month: "Maio",
+      lineup: [
+        { time: "20h00", artist: "Klessinha" },
+        { time: "21h00", artist: "Eric Land" },
+        { time: "22h30", artist: "Lairton" },
+        { time: "23h30", artist: "Wesley Safadão" },
+        { time: "00h00", artist: "Vanessinha Mix" },
+        { time: "02h30", artist: "Toque Dez" },
+        { time: "04h00", artist: "Ygor Raniere" },
+      ],
+      highlights: ["Wesley Safadão", "Eric Land"],
+    },
+  ],
+};
