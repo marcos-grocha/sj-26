@@ -736,6 +736,72 @@ festivalPopupClose.addEventListener("click", hideFestivalPopup);
 
 applyFestivalToDOM();
 
+// ── São João de Areia Branca (modal bônus) ──
+const areiaButton = document.getElementById("areia-button");
+const areiaModal = document.getElementById("areia-modal");
+const areiaModalClose = document.getElementById("areia-modal-close");
+const areiaModalShield = document.getElementById("areia-modal-shield");
+const areiaModalDays = document.getElementById("areia-modal-days");
+
+if (areiaButton && typeof AREIA_BRANCA !== "undefined") {
+  areiaButton.innerHTML = AREIA_BRANCA.icon;
+  areiaModalShield.innerHTML = AREIA_BRANCA.icon;
+
+  function renderAreiaDays() {
+    areiaModalDays.innerHTML = AREIA_BRANCA.days.map(day => {
+      const [, , d] = day.date.split("-");
+      const rows = day.lineup.map(item => {
+        const isStar = day.highlights && day.highlights.includes(item.artist);
+        return `<li class="areia-lineup__row${isStar ? " is-star" : ""}">
+          <span class="areia-lineup__time">${item.time}</span>
+          <span class="areia-lineup__artist">${item.artist}</span>
+        </li>`;
+      }).join("");
+      return `
+        <article class="areia-day">
+          <div class="areia-day__head">
+            <span class="areia-day__num">${parseInt(d, 10)}</span>
+            <span class="areia-day__month">${day.month}</span>
+            <span class="areia-day__weekday">${day.weekday}</span>
+          </div>
+          <ul class="areia-lineup">${rows}</ul>
+        </article>
+      `;
+    }).join("");
+  }
+  renderAreiaDays();
+
+  function showAreiaModal() {
+    areiaModal.classList.add("visible");
+    areiaModal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+  function hideAreiaModal() {
+    areiaModal.classList.remove("visible");
+    areiaModal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  areiaButton.addEventListener("click", showAreiaModal);
+  areiaButton.addEventListener("keydown", e => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      showAreiaModal();
+    }
+  });
+  areiaModalClose.addEventListener("click", hideAreiaModal);
+  areiaModal.addEventListener("click", e => {
+    if (e.target.dataset.action === "close") hideAreiaModal();
+  });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && areiaModal.classList.contains("visible")) {
+      hideAreiaModal();
+    }
+  });
+
+  setTimeout(() => areiaButton.classList.add("visible"), 600);
+}
+
 // Auto-scroll to today
 const todayCard = document.querySelector(".day-card.today");
 if (todayCard) {
