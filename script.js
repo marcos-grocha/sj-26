@@ -5,9 +5,10 @@ let currentFestivalId = localStorage.getItem(ACTIVE_FESTIVAL_KEY) || "arraia-do-
 if (!FESTIVALS[currentFestivalId]) currentFestivalId = "arraia-do-povo";
 
 function getCurrentFestival() { return FESTIVALS[currentFestivalId]; }
-function getOtherFestival() {
-  const ids = Object.keys(FESTIVALS);
-  return FESTIVALS[ids.find(id => id !== currentFestivalId)];
+function getOtherFestivalsWithMatch(q) {
+  return Object.values(FESTIVALS).filter(
+    f => f.id !== currentFestivalId && hasMatchInFestival(f, q)
+  );
 }
 
 // ── Render ──
@@ -185,22 +186,28 @@ function clearSearchState({ refocus = false } = {}) {
 }
 
 function renderSearchEmpty(container, q, originalQuery) {
-  const other = getOtherFestival();
-  const otherHasMatch = hasMatchInFestival(other, q);
+  const others = getOtherFestivalsWithMatch(q);
   const safeQuery = originalQuery.replace(/[<>&"']/g, c => ({
     "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&#39;"
   }[c]));
+
+  let hint;
+  if (others.length === 1) hint = `Mas tem resultado no ${others[0].name}.`;
+  else if (others.length > 1) hint = `Mas tem resultado em: ${others.map(f => f.name).join(", ")}.`;
+  else hint = "Tente outro nome ou confira a programação completa.";
+
+  const switchButtons = others
+    .map(f => `<button type="button" class="search-empty__btn primary" data-action="switch" data-festival="${f.id}">Ver no ${f.name}</button>`)
+    .join("");
 
   const empty = document.createElement("div");
   empty.className = "search-empty";
   empty.innerHTML = `
     <p class="search-empty__title">Nenhum artista encontrado para <strong>"${safeQuery}"</strong></p>
-    <p class="search-empty__hint">${otherHasMatch
-      ? `Mas tem resultado no ${other.name}.`
-      : "Tente outro nome ou confira a programação completa."}</p>
+    <p class="search-empty__hint">${hint}</p>
     <div class="search-empty__actions">
       <button type="button" class="search-empty__btn" data-action="clear">Limpar busca</button>
-      ${otherHasMatch ? `<button type="button" class="search-empty__btn primary" data-action="switch">Ver no ${other.name}</button>` : ""}
+      ${switchButtons}
     </div>
   `;
   container.appendChild(empty);
@@ -208,13 +215,12 @@ function renderSearchEmpty(container, q, originalQuery) {
   empty.querySelector('[data-action="clear"]').addEventListener("click", () => {
     clearSearchState({ refocus: true });
   });
-  const switchBtn = empty.querySelector('[data-action="switch"]');
-  if (switchBtn) {
-    switchBtn.addEventListener("click", () => {
+  empty.querySelectorAll('[data-action="switch"]').forEach(btn => {
+    btn.addEventListener("click", () => {
       pendingSearchAfterSwitch = searchInputEl.value;
-      switchFestival();
+      switchFestival(btn.dataset.festival);
     });
-  }
+  });
 }
 
 function applySearch() {
