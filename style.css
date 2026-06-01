@@ -981,88 +981,6 @@ footer {
   transform: rotate(20deg);
 }
 
-/* ── POP-UP DO FESTIVAL TOGGLE ── */
-.festival-popup {
-  position: fixed;
-  bottom: 8.9rem;
-  right: 5rem;
-  z-index: 100;
-  background: var(--surface);
-  border: 1.5px solid var(--accent);
-  border-radius: var(--radius);
-  padding: 0.65rem 1.8rem 0.65rem 0.9rem;
-  max-width: 220px;
-  opacity: 0;
-  transform: scale(0);
-  transform-origin: bottom right;
-  transition: opacity 0.35s, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-              border-color 0.5s;
-  pointer-events: none;
-}
-.festival-popup::after {
-  content: "";
-  position: absolute;
-  right: -8px;
-  bottom: 1rem;
-  width: 0;
-  height: 0;
-  border-top: 7px solid transparent;
-  border-bottom: 7px solid transparent;
-  border-left: 8px solid var(--accent);
-  transition: border-left-color 0.5s;
-}
-.festival-popup.visible {
-  opacity: 1;
-  transform: scale(1);
-  pointer-events: auto;
-}
-.festival-popup.collapsing {
-  opacity: 0;
-  transform: scale(0);
-  transition: opacity 0.35s ease-in, transform 0.35s cubic-bezier(0.55, 0, 1, 0.45);
-}
-.festival-popup__text {
-  margin: 0;
-  font-size: 0.78rem;
-  color: var(--text);
-  line-height: 1.35;
-}
-.festival-popup__name {
-  color: var(--accent);
-  font-weight: 700;
-  white-space: nowrap;
-  transition: color 0.5s;
-}
-.festival-popup__close {
-  position: absolute;
-  top: 0.2rem;
-  right: 0.35rem;
-  background: none;
-  border: none;
-  color: var(--muted);
-  font-size: 1rem;
-  cursor: pointer;
-  line-height: 1;
-  padding: 0 0.2rem;
-}
-.festival-popup__close:hover { color: var(--text); }
-
-@media (max-width: 480px) {
-  .festival-popup {
-    right: 1.5rem;
-    bottom: 12.2rem;
-    max-width: calc(100vw - 3rem);
-  }
-  .festival-popup::after {
-    right: 1rem;
-    bottom: -8px;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    border-top: 8px solid var(--accent);
-    border-bottom: none;
-  }
-}
-
 /* ── ACCESSIBILITY: Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
   header h1 { animation: none; filter: none; -webkit-text-fill-color: var(--gold); background: none; }
@@ -1085,12 +1003,20 @@ footer {
   transition: width 0.08s linear;
 }
 
-/* ── FESTIVAL TOGGLE BUBBLE ── */
-.festival-toggle {
+/* ── BOTÕES FLUTUANTES POR FESTIVAL ── */
+/* Container só agrupa semanticamente; cada filho se posiciona absoluto. */
+.festival-buttons {
   position: fixed;
-  bottom: 8.9rem;
-  right: 1.5rem;
+  inset: 0;
+  pointer-events: none;
   z-index: 90;
+}
+
+.festival-btn {
+  position: fixed;
+  /* Base do empilhamento: primeiro botão fica em 8.9rem; cada próximo sobe 3.7rem. */
+  bottom: calc(8.9rem + var(--idx, 0) * 3.7rem);
+  right: 1.5rem;
   width: 2.8rem;
   height: 2.8rem;
   border-radius: 50%;
@@ -1106,21 +1032,33 @@ footer {
   transform: scale(0);
   transform-origin: bottom right;
   transition: opacity 0.3s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-              border-color 0.5s, background 0.5s;
+              border-color 0.4s, background 0.4s, box-shadow 0.3s;
   pointer-events: none;
   line-height: 1;
   user-select: none;
 }
-.festival-toggle.visible {
-  opacity: 0.85;
+.festival-buttons.visible .festival-btn {
+  opacity: 0.7;
   transform: scale(1);
   pointer-events: auto;
+  /* Atraso em cascata: cada botão entra após o anterior. */
+  transition-delay: calc(var(--idx, 0) * 60ms),
+                    calc(var(--idx, 0) * 60ms),
+                    0s, 0s, 0s;
 }
-.festival-toggle:hover { opacity: 1 !important; transform: scale(1.08); }
-.festival-toggle:focus-visible {
+.festival-btn:hover { opacity: 1; transform: scale(1.08); }
+.festival-btn:focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 3px;
 }
+.festival-buttons.visible .festival-btn.is-active {
+  opacity: 1;
+  border-color: var(--gold);
+  border-width: 2px;
+  box-shadow: 0 0 0 2px rgba(244, 192, 37, 0.18),
+              0 2px 10px rgba(0, 0, 0, 0.35);
+}
+.festival-btn.is-active:hover { transform: scale(1.05); }
 .caju-icon {
   width: 1.75rem;
   height: 1.95rem;
@@ -1536,7 +1474,7 @@ footer {
 
 @media (prefers-reduced-motion: reduce) {
   .curtain-flag { transition-duration: 0.25s; transition-delay: 0s !important; }
-  .festival-toggle { transition-duration: 0.2s; }
+  .festival-btn { transition-duration: 0.2s; transition-delay: 0s !important; }
   .skeleton-line { animation: none; }
   .flame, .bonfire-glow, .spark { animation: none; }
   .orla-arch { transition-duration: 0.25s; transition-delay: 0s !important; }
@@ -1545,7 +1483,8 @@ footer {
 /* ── BOTÃO + MODAL AREIA BRANCA (evento bônus) ── */
 .areia-button {
   position: fixed;
-  bottom: 12.6rem;
+  /* Fica logo acima do último botão de festival empilhado. */
+  bottom: calc(8.9rem + var(--festival-count, 2) * 3.7rem);
   right: 1.5rem;
   z-index: 90;
   width: 2.8rem;

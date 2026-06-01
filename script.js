@@ -585,12 +585,52 @@ themeToggle.addEventListener("keydown", e => {
 
 setTimeout(() => themeToggle.classList.add("visible"), 400);
 
-// ── Festival toggle ──
-const festivalToggle = document.getElementById("festival-toggle");
+// ── Festival buttons (um por festival) ──
+const festivalButtonsContainer = document.getElementById("festival-buttons");
 const festivalCurtain = document.getElementById("festival-curtain");
 const festivalBonfire = document.getElementById("festival-bonfire");
 const bonfireSparks = festivalBonfire.querySelector(".bonfire-sparks");
 const curtainFlagsContainer = festivalCurtain.querySelector(".curtain-flags");
+
+const festivalBtns = {};
+
+function renderFestivalButtons() {
+  festivalButtonsContainer.innerHTML = "";
+  const ids = Object.keys(FESTIVALS);
+  festivalButtonsContainer.style.setProperty("--festival-count", ids.length);
+
+  ids.forEach((id, idx) => {
+    const f = FESTIVALS[id];
+    const btn = document.createElement("div");
+    btn.className = "festival-btn";
+    btn.dataset.festivalId = id;
+    btn.style.setProperty("--idx", idx);
+    btn.setAttribute("role", "button");
+    btn.setAttribute("tabindex", "0");
+    btn.setAttribute("aria-label", `Ir para ${f.name}`);
+    btn.title = f.name;
+    btn.innerHTML = f.icon;
+
+    btn.addEventListener("click", () => switchFestival(id));
+    btn.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        switchFestival(id);
+      }
+    });
+
+    festivalButtonsContainer.appendChild(btn);
+    festivalBtns[id] = btn;
+  });
+
+  document.body.style.setProperty("--festival-count", ids.length);
+}
+
+function updateActiveFestivalButton() {
+  Object.entries(festivalBtns).forEach(([id, btn]) => {
+    btn.classList.toggle("is-active", id === currentFestivalId);
+  });
+}
 
 for (let i = 0; i < 18; i++) {
   const s = document.createElement("span");
@@ -611,14 +651,10 @@ for (let i = 0; i < CURTAIN_FLAG_COUNT; i++) {
   curtainFlagsContainer.appendChild(f);
 }
 
-const festivalPopup = document.getElementById("festival-popup");
-const festivalPopupName = document.getElementById("festival-popup-name");
-const festivalPopupClose = document.getElementById("festival-popup-close");
 const mapPopupName = document.getElementById("map-popup-name");
 
 function applyFestivalToDOM() {
   const festival = getCurrentFestival();
-  const other = getOtherFestival();
 
   document.body.classList.remove(...Object.values(FESTIVALS).map(f => f.theme));
   document.body.classList.add(festival.theme);
@@ -627,11 +663,8 @@ function applyFestivalToDOM() {
   festivalSubtitleEl.textContent = festival.subtitle;
   document.title = `${festival.name} — Programação`;
 
-  festivalToggle.innerHTML = other.icon;
-  festivalToggle.title = `Ir para ${other.name}`;
-  festivalToggle.setAttribute("aria-label", `Ir para ${other.name}`);
-  festivalPopupName.textContent = other.name;
   mapPopupName.textContent = festival.name;
+  updateActiveFestivalButton();
 
   filterBarEl.classList.toggle("is-hidden", festival.weeks.length === 0);
 
@@ -696,14 +729,15 @@ function runBonfireTransition(swapFn) {
   }, 800);
 }
 
-function switchFestival() {
+function switchFestival(targetId) {
   if (switching) return;
+  if (!targetId || !FESTIVALS[targetId] || targetId === currentFestivalId) return;
   switching = true;
 
-  const goingToForroCaju = currentFestivalId === "arraia-do-povo";
+  const goingToForroCaju = targetId === "forro-caju";
 
   const swap = () => {
-    currentFestivalId = getOtherFestival().id;
+    currentFestivalId = targetId;
     localStorage.setItem(ACTIVE_FESTIVAL_KEY, currentFestivalId);
     applyFestivalToDOM();
     window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
@@ -716,24 +750,7 @@ function switchFestival() {
   }
 }
 
-function hideFestivalPopup() {
-  festivalPopup.classList.remove("visible");
-  festivalPopup.classList.add("collapsing");
-}
-
-festivalToggle.addEventListener("click", () => {
-  hideFestivalPopup();
-  switchFestival();
-});
-festivalToggle.addEventListener("keydown", e => {
-  if (e.key === "Enter" || e.key === " ") {
-    e.preventDefault();
-    hideFestivalPopup();
-    switchFestival();
-  }
-});
-festivalPopupClose.addEventListener("click", hideFestivalPopup);
-
+renderFestivalButtons();
 applyFestivalToDOM();
 
 // ── São João de Areia Branca (modal bônus) ──
@@ -808,5 +825,6 @@ if (todayCard) {
   setTimeout(() => todayCard.scrollIntoView({ behavior: "smooth", block: "center" }), 300);
 }
 
-setTimeout(() => festivalToggle.classList.add("visible"), 400);
-setTimeout(() => festivalPopup.classList.add("visible"), 1000);
+setTimeout(() => {
+  festivalButtonsContainer.classList.add("visible");
+}, 400);
