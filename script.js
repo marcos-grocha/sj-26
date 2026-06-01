@@ -558,6 +558,7 @@ setTimeout(() => themeToggle.classList.add("visible"), 400);
 const festivalButtonsContainer = document.getElementById("festival-buttons");
 const festivalCurtain = document.getElementById("festival-curtain");
 const festivalBonfire = document.getElementById("festival-bonfire");
+const festivalStamp = document.getElementById("festival-stamp");
 const bonfireSparks = festivalBonfire.querySelector(".bonfire-sparks");
 const curtainFlagsContainer = festivalCurtain.querySelector(".curtain-flags");
 
@@ -566,7 +567,6 @@ const festivalBtns = {};
 function renderFestivalButtons() {
   festivalButtonsContainer.innerHTML = "";
   const ids = Object.keys(FESTIVALS);
-  festivalButtonsContainer.style.setProperty("--festival-count", ids.length);
 
   ids.forEach((id, idx) => {
     const f = FESTIVALS[id];
@@ -591,8 +591,6 @@ function renderFestivalButtons() {
     festivalButtonsContainer.appendChild(btn);
     festivalBtns[id] = btn;
   });
-
-  document.body.style.setProperty("--festival-count", ids.length);
 }
 
 function updateActiveFestivalButton() {
@@ -695,12 +693,29 @@ function runBonfireTransition(swapFn) {
   }, 800);
 }
 
+function runStampTransition(swapFn) {
+  festivalStamp.classList.add("stamping");
+  setTimeout(() => {
+    try { swapFn(); } catch (err) { console.error(err); }
+    festivalStamp.classList.remove("stamping");
+    festivalStamp.classList.add("fading");
+    setTimeout(() => {
+      festivalStamp.classList.remove("fading");
+      switching = false;
+    }, 500);
+  }, 650);
+}
+
+const FESTIVAL_TRANSITIONS = {
+  curtain: runCurtainTransition,
+  bonfire: runBonfireTransition,
+  stamp: runStampTransition,
+};
+
 function switchFestival(targetId) {
   if (switching) return;
   if (!targetId || !FESTIVALS[targetId] || targetId === currentFestivalId) return;
   switching = true;
-
-  const goingToForroCaju = targetId === "forro-caju";
 
   const swap = () => {
     currentFestivalId = targetId;
@@ -709,81 +724,12 @@ function switchFestival(targetId) {
     window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
   };
 
-  if (goingToForroCaju) {
-    runCurtainTransition(swap);
-  } else {
-    runBonfireTransition(swap);
-  }
+  const runTransition = FESTIVAL_TRANSITIONS[FESTIVALS[targetId].transition] || runBonfireTransition;
+  runTransition(swap);
 }
 
 renderFestivalButtons();
 applyFestivalToDOM();
-
-// ── São João de Areia Branca (modal bônus) ──
-const areiaButton = document.getElementById("areia-button");
-const areiaModal = document.getElementById("areia-modal");
-const areiaModalClose = document.getElementById("areia-modal-close");
-const areiaModalShield = document.getElementById("areia-modal-shield");
-const areiaModalDays = document.getElementById("areia-modal-days");
-
-if (areiaButton && typeof AREIA_BRANCA !== "undefined") {
-  areiaButton.innerHTML = AREIA_BRANCA.icon;
-  areiaModalShield.innerHTML = AREIA_BRANCA.icon;
-
-  function renderAreiaDays() {
-    areiaModalDays.innerHTML = AREIA_BRANCA.days.map(day => {
-      const [, , d] = day.date.split("-");
-      const rows = day.lineup.map(item => {
-        const isStar = day.highlights && day.highlights.includes(item.artist);
-        return `<li class="areia-lineup__row${isStar ? " is-star" : ""}">
-          <span class="areia-lineup__time">${item.time}</span>
-          <span class="areia-lineup__artist">${item.artist}</span>
-        </li>`;
-      }).join("");
-      return `
-        <article class="areia-day">
-          <div class="areia-day__head">
-            <span class="areia-day__num">${parseInt(d, 10)}</span>
-            <span class="areia-day__month">${day.month}</span>
-            <span class="areia-day__weekday">${day.weekday}</span>
-          </div>
-          <ul class="areia-lineup">${rows}</ul>
-        </article>
-      `;
-    }).join("");
-  }
-  renderAreiaDays();
-
-  function showAreiaModal() {
-    areiaModal.classList.add("visible");
-    areiaModal.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
-  }
-  function hideAreiaModal() {
-    areiaModal.classList.remove("visible");
-    areiaModal.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
-  }
-
-  areiaButton.addEventListener("click", showAreiaModal);
-  areiaButton.addEventListener("keydown", e => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      showAreiaModal();
-    }
-  });
-  areiaModalClose.addEventListener("click", hideAreiaModal);
-  areiaModal.addEventListener("click", e => {
-    if (e.target.dataset.action === "close") hideAreiaModal();
-  });
-  document.addEventListener("keydown", e => {
-    if (e.key === "Escape" && areiaModal.classList.contains("visible")) {
-      hideAreiaModal();
-    }
-  });
-
-  setTimeout(() => areiaButton.classList.add("visible"), 600);
-}
 
 // Auto-scroll to today
 const todayCard = document.querySelector(".day-card.today");

@@ -303,6 +303,25 @@ const CAJU_ICON = `<svg class="caju-icon" viewBox="0 0 64 72" xmlns="http://www.
   <ellipse cx="30" cy="58" rx="3" ry="1.6" fill="#ffe7b5" opacity="0.55" transform="rotate(-18 30 58)"/>
 </svg>`;
 
+// ── São João de Areia Branca (cidade vizinha) ──
+const AREIA_BRANCA_ICON = `<img class="areia-logo-img" src="assets/areia-branca-logo.png" alt="São João de Areia Branca" />`;
+
+const AREIA_BRANCA_WEEKS = [
+  {
+    id: 1,
+    title: "Semana 1 · Final de Maio",
+    filterLabel: "Semana: 1 · Final de Maio",
+    days: [
+      { date: "2026-05-30", weekday: "Sáb", month: "Maio", special: null,
+        artists: ["Nineia Oliveira", "Luan Estilizado", "Polyama Lins", "Zé Vaqueiro", "Vitor Santos", "Henry Freitas", "Mikael Santos"],
+        highlights: ["Zé Vaqueiro", "Luan Estilizado", "Henry Freitas", "Mikael Santos"] },
+      { date: "2026-05-31", weekday: "Dom", month: "Maio", special: null,
+        artists: ["Klessinha", "Eric Land", "Lairton", "Wesley Safadão", "Vanessinha Mix", "Toque Dez", "Ygor Raniere"],
+        highlights: ["Wesley Safadão", "Eric Land"] },
+    ]
+  }
+];
+
 // ── Festivais ──
 const FESTIVALS = {
   "arraia-do-povo": {
@@ -312,6 +331,7 @@ const FESTIVALS = {
     startDate: "2026-05-29T18:00:00",
     icon: ARRAIA_ICON,
     theme: "theme-arraia",
+    transition: "bonfire",
     weeks: ARRAIA_WEEKS,
   },
   "forro-caju": {
@@ -321,45 +341,17 @@ const FESTIVALS = {
     startDate: "2026-06-04T18:00:00",
     icon: CAJU_ICON,
     theme: "theme-forro-caju",
+    transition: "curtain",
     weeks: FORRO_CAJU_WEEKS,
   },
-};
-
-// ── São João de Areia Branca (cidade vizinha · evento bônus) ──
-const AREIA_BRANCA_ICON = `<img class="areia-logo-img" src="assets/areia-branca-logo.png" alt="São João de Areia Branca" />`;
-
-const AREIA_BRANCA = {
-  id: "areia-branca",
-  name: "São João de Areia Branca",
-  subtitle: "Onde o forró começa!",
-  tagline: "Cidade vizinha · evento bônus",
-  icon: AREIA_BRANCA_ICON,
-  days: [
-    {
-      date: "2026-05-30", weekday: "Sáb", month: "Maio",
-      lineup: [
-        { time: "20h30", artist: "Nineia Oliveira" },
-        { time: "21h30", artist: "Luan Estilizado" },
-        { time: "23h00", artist: "Polyama Lins" },
-        { time: "00h00", artist: "Zé Vaqueiro" },
-        { time: "01h30", artist: "Vitor Santos" },
-        { time: "03h00", artist: "Henry Freitas" },
-        { time: "04h30", artist: "Mikael Santos" },
-      ],
-      highlights: ["Zé Vaqueiro", "Luan Estilizado", "Henry Freitas", "Mikael Santos"],
-    },
-    {
-      date: "2026-05-31", weekday: "Dom", month: "Maio",
-      lineup: [
-        { time: "20h00", artist: "Klessinha" },
-        { time: "21h00", artist: "Eric Land" },
-        { time: "22h30", artist: "Lairton" },
-        { time: "23h30", artist: "Wesley Safadão" },
-        { time: "00h00", artist: "Vanessinha Mix" },
-        { time: "02h30", artist: "Toque Dez" },
-        { time: "04h00", artist: "Ygor Raniere" },
-      ],
-      highlights: ["Wesley Safadão", "Eric Land"],
-    },
-  ],
+  "areia-branca": {
+    id: "areia-branca",
+    name: "São João de Areia Branca",
+    subtitle: "Onde o forró começa! · Cidade vizinha",
+    startDate: "2026-05-30T20:30:00",
+    icon: AREIA_BRANCA_ICON,
+    theme: "theme-areia-branca",
+    transition: "stamp",
+    weeks: AREIA_BRANCA_WEEKS,
+  },
 };

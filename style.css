@@ -34,6 +34,12 @@ body.theme-forro-caju {
   --gold: #e8a020;
 }
 
+body.theme-areia-branca {
+  --accent: #1e3a7a;
+  --accent2: #14285a;
+  --gold: #f4c025;
+}
+
 /* Anti-FOUC: html.pre-light é aplicado pelo script inline no <head> antes do body parsear */
 html.pre-light body,
 body.light-mode {
@@ -58,6 +64,9 @@ body.light-mode.theme-arraia    { --accent: #b32a20; }
 
 html.pre-light body.theme-forro-caju,
 body.light-mode.theme-forro-caju { --accent: #157046; }
+
+html.pre-light body.theme-areia-branca,
+body.light-mode.theme-areia-branca { --accent: #16306a; }
 
 /* Tag dourada perde contraste sobre creme — escurece e reforça fundo */
 html.pre-light .artist-tag.star,
@@ -948,6 +957,12 @@ footer {
   filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
   border-radius: 3px;
 }
+.festival-btn .areia-logo-img {
+  width: 2.05rem;
+  height: 2.05rem;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+}
 
 /* ── FILTER BAR hidden (when festival has no weeks) ── */
 .filter-bar.is-hidden {
@@ -1356,260 +1371,99 @@ footer {
   .skeleton-line { animation: none; }
   .flame, .bonfire-glow, .spark { animation: none; }
   .orla-arch { transition-duration: 0.25s; transition-delay: 0s !important; }
+  .stamp-backdrop, .stamp-flash, .stamp-shield { animation: none !important; }
 }
 
-/* ── BOTÃO + MODAL AREIA BRANCA (evento bônus) ── */
-.areia-button {
-  position: fixed;
-  /* Fica logo acima do último botão de festival empilhado. */
-  bottom: calc(5.2rem + var(--festival-count, 2) * 3.7rem);
-  right: 1.5rem;
-  z-index: 90;
-  width: 2.8rem;
-  height: 2.8rem;
-  border-radius: 50%;
-  background: var(--surface);
-  border: 1.5px solid #1e3a7a;
-  color: #f4c025;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transform: scale(0);
-  transform-origin: bottom right;
-  transition: opacity 0.3s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-              border-color 0.5s, background 0.5s;
-  pointer-events: none;
-  line-height: 1;
-  cursor: pointer;
-  user-select: none;
-}
-.areia-button.visible {
-  opacity: 0.9;
-  transform: scale(1);
-  pointer-events: auto;
-}
-.areia-button:hover { opacity: 1 !important; transform: scale(1.08); }
-.areia-button:focus-visible {
-  outline: 2px solid var(--gold);
-  outline-offset: 3px;
-}
-.areia-logo-img {
-  width: 2.2rem;
-  height: auto;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
-  display: block;
-}
-.areia-button .areia-logo-img {
-  width: 2.2rem;
-}
-
-.areia-modal {
+/* ── TRANSIÇÃO CARIMBO (São João de Areia Branca) ── */
+.festival-stamp {
   position: fixed;
   inset: 0;
-  z-index: 200;
+  z-index: 9999;
+  pointer-events: none;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
   opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
+  transition: opacity 0.3s ease;
 }
-.areia-modal.visible {
+.festival-stamp.stamping,
+.festival-stamp.fading {
+  pointer-events: all;
   opacity: 1;
-  pointer-events: auto;
 }
-.areia-modal__backdrop {
+.festival-stamp.fading {
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+}
+
+/* Fundo azul-marinho do brasão: transparente na descida, fecha no impacto. */
+.stamp-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.68);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
-  cursor: pointer;
+  background: radial-gradient(ellipse at 50% 50%,
+    #1e3a7a 0%,
+    #14285a 55%,
+    #0b1838 100%
+  );
+  opacity: 1;
 }
-.areia-modal__panel {
-  position: relative;
-  background: var(--surface);
-  border: 1.5px solid #1e3a7a;
-  border-radius: var(--radius);
-  padding: 1.6rem 1.2rem 1.2rem;
-  width: 100%;
-  max-width: 720px;
-  max-height: calc(100vh - 2rem);
-  overflow-y: auto;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
-  transform: scale(0.92);
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+.festival-stamp.stamping .stamp-backdrop {
+  animation: stampBackdrop 0.65s ease forwards;
 }
-.areia-modal.visible .areia-modal__panel { transform: scale(1); }
 
-.areia-modal__close {
+/* Clarão dourado que estoura no momento da batida do carimbo. */
+.stamp-flash {
   position: absolute;
-  top: 0.4rem;
-  right: 0.55rem;
-  background: none;
-  border: none;
-  color: var(--muted);
-  font-size: 1.6rem;
-  cursor: pointer;
-  line-height: 1;
-  padding: 0.2rem 0.5rem;
-  z-index: 2;
+  top: 50%;
+  left: 50%;
+  width: 65vmin;
+  height: 65vmin;
+  transform: translate(-50%, -50%) scale(0.3);
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(244, 192, 37, 0.95) 0%,
+    rgba(244, 192, 37, 0.45) 38%,
+    rgba(244, 192, 37, 0) 70%
+  );
+  opacity: 0;
+  pointer-events: none;
 }
-.areia-modal__close:hover { color: var(--text); }
+.festival-stamp.stamping .stamp-flash {
+  animation: stampFlash 0.5s ease-out 0.4s forwards;
+}
 
-.areia-modal__header {
-  text-align: center;
-  padding-bottom: 1.2rem;
-  border-bottom: 1px dashed var(--border);
-  margin-bottom: 1.2rem;
-}
-.areia-modal__shield {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 0.5rem;
-}
-.areia-modal__shield .areia-logo-img {
-  width: 4.5rem;
+/* Brasão: desce grande e inclinado, crava no centro em escala 1. */
+.stamp-shield {
+  position: relative;
+  width: 42vmin;
+  max-width: 320px;
   height: auto;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+  transform: scale(1) rotate(0deg);
+  opacity: 1;
+  filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.55));
 }
-.areia-modal__title {
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: var(--text);
-  margin: 0.1rem 0 0.25rem;
-  letter-spacing: 0.3px;
-}
-.areia-modal__subtitle {
-  margin: 0;
-  font-size: 0.92rem;
-  color: var(--accent);
-  font-weight: 700;
-  font-style: italic;
-}
-.areia-modal__tagline {
-  margin: 0.3rem 0 0;
-  font-size: 0.78rem;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
+.festival-stamp.stamping .stamp-shield {
+  animation: stampPress 0.65s cubic-bezier(0.5, 0, 0.3, 1);
 }
 
-.areia-modal__days {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+@keyframes stampBackdrop {
+  0%   { opacity: 0; }
+  50%  { opacity: 0; }
+  66%  { opacity: 1; }
+  100% { opacity: 1; }
 }
-@media (max-width: 600px) {
-  .areia-modal__days { grid-template-columns: 1fr; }
-  .areia-modal__panel { padding: 1.3rem 1rem 1rem; }
+@keyframes stampPress {
+  0%   { transform: scale(2.6) rotate(-14deg); opacity: 0; }
+  35%  { opacity: 1; }
+  66%  { transform: scale(0.9) rotate(2deg); opacity: 1; }
+  80%  { transform: scale(1.05) rotate(-1deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
-
-.areia-day {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 0.9rem 0.9rem 0.7rem;
-}
-.areia-day__head {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  padding-bottom: 0.6rem;
-  margin-bottom: 0.6rem;
-  border-bottom: 1px solid var(--border);
-}
-.areia-day__num {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--accent);
-  line-height: 1;
-}
-.areia-day__month {
-  font-size: 0.8rem;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.areia-day__weekday {
-  margin-left: auto;
-  font-size: 0.75rem;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  background: var(--tag-bg);
-  border: 1px solid var(--border);
-  padding: 0.15rem 0.5rem;
-  border-radius: 999px;
-}
-
-.areia-lineup {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-.areia-lineup__row {
-  display: grid;
-  grid-template-columns: 3.2rem 1fr;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.35rem 0.1rem;
-  border-radius: 6px;
-}
-.areia-lineup__row.is-star {
-  background: rgba(232, 160, 32, 0.08);
-  border: 1px solid rgba(232, 160, 32, 0.35);
-  padding: 0.4rem 0.5rem;
-}
-.areia-lineup__time {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.3px;
-}
-.areia-lineup__row.is-star .areia-lineup__time {
-  color: var(--gold);
-}
-.areia-lineup__artist {
-  font-size: 0.92rem;
-  color: var(--text);
-  font-weight: 500;
-}
-.areia-lineup__row.is-star .areia-lineup__artist {
-  color: var(--gold);
-  font-weight: 700;
-}
-.areia-lineup__row.is-star .areia-lineup__artist::before {
-  content: "★ ";
-  font-size: 0.85em;
-}
-
-html.pre-light .areia-button,
-body.light-mode .areia-button {
-  background: var(--surface);
-  border-color: #1e3a7a;
-}
-html.pre-light .areia-modal__panel,
-body.light-mode .areia-modal__panel {
-  border-color: #1e3a7a;
-}
-html.pre-light .areia-lineup__row.is-star,
-body.light-mode .areia-lineup__row.is-star {
-  background: rgba(200, 140, 40, 0.18);
-  border-color: rgba(200, 140, 40, 0.55);
-}
-html.pre-light .areia-lineup__row.is-star .areia-lineup__time,
-html.pre-light .areia-lineup__row.is-star .areia-lineup__artist,
-body.light-mode .areia-lineup__row.is-star .areia-lineup__time,
-body.light-mode .areia-lineup__row.is-star .areia-lineup__artist {
-  color: #8a5a10;
+@keyframes stampFlash {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+  25%  { opacity: 0.9; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.6); }
 }
 
 /* ── RESPONSIVE ── */
