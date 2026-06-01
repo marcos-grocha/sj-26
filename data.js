@@ -3,7 +3,7 @@ const ARRAIA_WEEKS = [
   {
     id: 1,
     title: "Semana 1 · Final de Maio",
-    filterLabel: "Semana: 1 · Final de Maio",
+    filterLabel: "Final de Maio",
     days: [
       { date: "2026-05-29", weekday: "Sex", month: "Maio", special: null,
         artists: ["Fogo na Saia", "Seu Desejo", 'Calcinha Preta "Atemporal"'],
@@ -22,7 +22,7 @@ const ARRAIA_WEEKS = [
   {
     id: 2,
     title: "Semana 2 · Início de Junho",
-    filterLabel: "Semana: 2 · Início de Junho",
+    filterLabel: "Início de Junho",
     days: [
       { date: "2026-06-02", weekday: "Ter", month: "Jun", special: null,
         artists: ["Leonne o Nobre", "Thiago Aquino", "Natanzinho Lima"],
@@ -53,7 +53,7 @@ const ARRAIA_WEEKS = [
   {
     id: 3,
     title: "Semana 3 · Dia dos Namorados & Santo Antônio",
-    filterLabel: "Semana: 3 · Namorados & St. Antônio",
+    filterLabel: "Namorados & St. Antônio",
     days: [
       { date: "2026-06-09", weekday: "Ter", month: "Jun", special: null,
         artists: ["Unha Pintada", "Devinho Novaes", "Mikael Santos"],
@@ -84,8 +84,8 @@ const ARRAIA_WEEKS = [
   },
   {
     id: 4,
-    title: "Semana 4 · Reta Final e São João",
-    filterLabel: "Semana: 4 · Reta Final",
+    title: "Semana 4 · Reta Final",
+    filterLabel: "Reta Final",
     days: [
       { date: "2026-06-16", weekday: "Ter", month: "Jun", special: null,
         artists: ["Nadson o Ferinha", "Silvanno Salles", "Heitor Costa"],
@@ -117,7 +117,7 @@ const ARRAIA_WEEKS = [
   {
     id: 5,
     title: "Semana 5 · São João & São Pedro",
-    filterLabel: "Semana: 5 · São João & São Pedro",
+    filterLabel: "São João & São Pedro",
     days: [
       { date: "2026-06-23", weekday: "Ter", month: "Jun", special: "Véspera de São João",
         artists: ["Luanzinho Moraes", "Fabiano Guimarães", "Rey Vaqueiro", "Painel de Controle"],
@@ -148,13 +148,21 @@ const ARRAIA_WEEKS = [
   }
 ];
 
-// ── Forró Caju (mesma nomenclatura de semanas do Arraiá, começa na Semana 2) ──
+// ── Forró Caju (mesma nomenclatura de semanas do Arraiá, começa na ─
 // Cada dia tem `location` (bairro/local), que substitui o "Palco 360°" do Arraiá.
 const FORRO_CAJU_WEEKS = [
   {
+    id: 1,
+    title: "Semana 1 · Final de Maio · sem atrações",
+    filterLabel: "Final de Maio",
+    days: [
+
+    ]
+  },
+  {
     id: 2,
     title: "Semana 2 · Início de Junho",
-    filterLabel: "Semana: 2 · Início de Junho",
+    filterLabel: "Início de Junho",
     days: [
       { date: "2026-06-04", weekday: "Qui", month: "Jun", special: "Corpus Christi",
         artists: ["Casaca de Couro", "Trio Nordestino", "Fulô de Mandacaru", "Alceu Valença", "João da Passárada"],
@@ -173,7 +181,7 @@ const FORRO_CAJU_WEEKS = [
   {
     id: 3,
     title: "Semana 3 · Dia dos Namorados & Santo Antônio",
-    filterLabel: "Semana: 3 · Namorados & St. Antônio",
+    filterLabel: "Namorados & St. Antônio",
     days: [
       { date: "2026-06-12", weekday: "Sex", month: "Jun", special: "Dia dos Namorados",
         artists: ["Lara Amélia", "Anastácia", "Waldonys", "Xotebaião", "Thaís Nogueira"],
@@ -188,8 +196,8 @@ const FORRO_CAJU_WEEKS = [
   },
   {
     id: 4,
-    title: "Semana 4 · Reta Final e São João",
-    filterLabel: "Semana: 4 · Reta Final",
+    title: "Semana 4 · Reta Final",
+    filterLabel: "Reta Final",
     days: [
       { date: "2026-06-20", weekday: "Sáb", month: "Jun", special: null,
         artists: ["Lourinho do Acordeon", "Taty Girl", "Joelma", "Matheus Fernandes", "Tatah Santana"],
@@ -204,7 +212,7 @@ const FORRO_CAJU_WEEKS = [
   {
     id: 5,
     title: "Semana 5 · São João & São Pedro",
-    filterLabel: "Semana: 5 · São João & São Pedro",
+    filterLabel: "São João & São Pedro",
     days: [
       { date: "2026-06-22", weekday: "Seg", month: "Jun", special: null,
         artists: ["Mariana Fagundes", "Fernandinha", "Diego e Victor Hugo", "Cidade dos Anjos"],
@@ -310,14 +318,69 @@ const AREIA_BRANCA_WEEKS = [
   {
     id: 1,
     title: "Semana 1 · Final de Maio",
-    filterLabel: "Semana: 1 · Final de Maio",
+    filterLabel: "Final de Maio",
     days: [
+      { date: "2026-05-29", weekday: "Sex", month: "Maio", special: "Abertura",
+        artists: ["Mano Walter"],
+        highlights: ["Mano Walter"] },
       { date: "2026-05-30", weekday: "Sáb", month: "Maio", special: null,
         artists: ["Nineia Oliveira", "Luan Estilizado", "Polyama Lins", "Zé Vaqueiro", "Vitor Santos", "Henry Freitas", "Mikael Santos"],
         highlights: ["Zé Vaqueiro", "Luan Estilizado", "Henry Freitas", "Mikael Santos"] },
       { date: "2026-05-31", weekday: "Dom", month: "Maio", special: null,
         artists: ["Klessinha", "Eric Land", "Lairton", "Wesley Safadão", "Vanessinha Mix", "Toque Dez", "Ygor Raniere"],
         highlights: ["Wesley Safadão", "Eric Land"] },
+    ]
+  },
+  {
+    id: 2,
+    title: "Semana 2 · Início de Junho · sem atrações",
+    filterLabel: "Início de Junho",
+    days: [
+
+    ]
+  },
+  {
+    id: 3,
+    title: "Semana 3 · Dia dos Namorados & Santo Antônio",
+    filterLabel: "Namorados & St. Antônio",
+    days: [
+      { date: "2026-06-13", weekday: "Sáb", month: "Jun", special: "Encontro Cultural",
+        artists: ["Transmissão Jogo do Brasil", "Xand Santos", "Moisés Ferraz", "Denis Andrade", "Igor Ativado", "Tutu Mar Azul"],
+        highlights: [],
+        worldcupHighlights: ["Transmissão Jogo do Brasil"] },
+    ]
+  },
+  {
+    id: 4,
+    title: "Semana 4 · Reta Final",
+    filterLabel: "Reta Final",
+    days: [
+      { date: "2026-06-19", weekday: "Sex", month: "Jun", special: null,
+        artists: ["Transmissão Jogo do Brasil", "Denio Rezende", "Thiago Dativo", "Vânia Leal"],
+        highlights: [],
+        worldcupHighlights: ["Transmissão Jogo do Brasil"] },
+    ]
+  },
+  {
+    id: 5,
+    title: "Semana 5 · São João & São Pedro",
+    filterLabel: "São João & São Pedro",
+    days: [
+      { date: "2026-06-22", weekday: "Seg", month: "Jun", special: "Show Religioso",
+        artists: ["Padre Sandro"],
+        highlights: [] },
+      { date: "2026-06-23", weekday: "Ter", month: "Jun", special: "Véspera de São João",
+        artists: ["Joseane de Joza", "Forró Chic Chic", "Alcymar Monteiro", "Jeanny Lins e Dedé Brasil"],
+        highlights: ["Alcymar Monteiro"] },
+      { date: "2026-06-24", weekday: "Qua", month: "Jun", special: "São João",
+        artists: ["Missa e Procissão"],
+        highlights: [] },
+      { date: "2026-06-27", weekday: "Sáb", month: "Jun", special: null,
+        artists: ["Wendel", "Henrique Alves", "Danielzinho Jr", "Tatah Santana", "X1 do Brega"],
+        highlights: [] },
+      { date: "2026-06-28", weekday: "Dom", month: "Jun", special: "Cavalgada",
+        artists: ["Alan das Vaquejadas", "Cícero das Vaquejadas", "Raynel Guedes", "Ramon e Randinho"],
+        highlights: [] },
     ]
   }
 ];
@@ -348,7 +411,7 @@ const FESTIVALS = {
     id: "areia-branca",
     name: "São João de Areia Branca",
     subtitle: "Onde o forró começa! · Cidade vizinha",
-    startDate: "2026-05-30T20:30:00",
+    startDate: "2026-05-29T20:00:00",
     icon: AREIA_BRANCA_ICON,
     theme: "theme-areia-branca",
     transition: "stamp",
