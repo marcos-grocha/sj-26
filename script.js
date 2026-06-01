@@ -513,37 +513,6 @@ function trackInstagramClick() {
   fetch("https://api.counterapi.dev/v1/sj26/instagram/up", { keepalive: true }).catch(() => {});
 }
 
-// ── Botão do mapa do evento ──
-const mapButton = document.getElementById("map-button");
-const mapPopup = document.getElementById("map-popup");
-const mapPopupClose = document.getElementById("map-popup-close");
-
-mapButton.innerHTML = `<svg class="map-button__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-  <path d="M9 3 3 5.5v15L9 18l6 3 6-2.5v-15L15 6 9 3z"/>
-  <path d="M9 3v15"/>
-  <path d="M15 6v15"/>
-</svg>`;
-
-function showMapPopup() {
-  mapPopup.classList.remove("collapsing");
-  mapPopup.classList.add("visible");
-}
-function hideMapPopup() {
-  mapPopup.classList.remove("visible");
-  mapPopup.classList.add("collapsing");
-}
-
-mapButton.addEventListener("click", showMapPopup);
-mapButton.addEventListener("keydown", e => {
-  if (e.key === "Enter" || e.key === " ") {
-    e.preventDefault();
-    showMapPopup();
-  }
-});
-mapPopupClose.addEventListener("click", hideMapPopup);
-
-setTimeout(() => mapButton.classList.add("visible"), 400);
-
 // Todos os links <a> do Instagram (popup, header, rodapé)
 document.querySelectorAll('a[href*="instagram.com/marcosjrgm"]').forEach(link => {
   link.addEventListener("click", trackInstagramClick);
@@ -651,8 +620,6 @@ for (let i = 0; i < CURTAIN_FLAG_COUNT; i++) {
   curtainFlagsContainer.appendChild(f);
 }
 
-const mapPopupName = document.getElementById("map-popup-name");
-
 function applyFestivalToDOM() {
   const festival = getCurrentFestival();
 
@@ -663,7 +630,6 @@ function applyFestivalToDOM() {
   festivalSubtitleEl.textContent = festival.subtitle;
   document.title = `${festival.name} — Programação`;
 
-  mapPopupName.textContent = festival.name;
   updateActiveFestivalButton();
 
   filterBarEl.classList.toggle("is-hidden", festival.weeks.length === 0);
