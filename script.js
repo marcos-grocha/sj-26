@@ -508,8 +508,13 @@ const festivalButtonsContainers = FESTIVAL_GROUPS
 const festivalCurtain = document.getElementById("festival-curtain");
 const festivalBonfire = document.getElementById("festival-bonfire");
 const festivalStamp = document.getElementById("festival-stamp");
+const festivalCaju = document.getElementById("festival-caju");
 const bonfireSparks = festivalBonfire.querySelector(".bonfire-sparks");
 const curtainFlagsContainer = festivalCurtain.querySelector(".curtain-flags");
+const cajuSpinnerEl = festivalCaju && festivalCaju.querySelector(".caju-spinner");
+if (cajuSpinnerEl && typeof CAJU_ICON === "string") {
+  cajuSpinnerEl.innerHTML = CAJU_ICON;
+}
 
 const festivalBtns = {};
 
@@ -658,10 +663,24 @@ function runStampTransition(swapFn) {
   }, 650);
 }
 
+function runCajuTransition(swapFn) {
+  festivalCaju.classList.add("spinning");
+  setTimeout(() => {
+    try { swapFn(); } catch (err) { console.error(err); }
+    festivalCaju.classList.remove("spinning");
+    festivalCaju.classList.add("fading");
+    setTimeout(() => {
+      festivalCaju.classList.remove("fading");
+      switching = false;
+    }, 500);
+  }, 750);
+}
+
 const FESTIVAL_TRANSITIONS = {
   curtain: runCurtainTransition,
   bonfire: runBonfireTransition,
   stamp: runStampTransition,
+  caju: runCajuTransition,
 };
 
 function switchFestival(targetId) {

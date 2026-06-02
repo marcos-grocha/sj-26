@@ -1374,6 +1374,7 @@ body.light-mode .theme-toggle::before {
   .flame, .bonfire-glow, .spark { animation: none; }
   .orla-arch { transition-duration: 0.25s; transition-delay: 0s !important; }
   .stamp-backdrop, .stamp-flash, .stamp-shield { animation: none !important; }
+  .caju-backdrop, .caju-flash, .caju-spinner { animation: none !important; }
 }
 
 /* ── TRANSIÇÃO CARIMBO (São João de Areia Branca) ── */
@@ -1466,6 +1467,102 @@ body.light-mode .theme-toggle::before {
   0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
   25%  { opacity: 0.9; }
   100% { opacity: 0; transform: translate(-50%, -50%) scale(1.6); }
+}
+
+/* ── TRANSIÇÃO CAJU (Forró Caju) ── */
+.festival-caju {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.festival-caju.spinning,
+.festival-caju.fading {
+  pointer-events: all;
+  opacity: 1;
+}
+.festival-caju.fading {
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+}
+
+/* Fundo verde do Forró Caju, com clarão central. */
+.caju-backdrop {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%,
+    #1e8a5a 0%,
+    #0f4a31 60%,
+    #062919 100%
+  );
+  opacity: 0;
+}
+.festival-caju.spinning .caju-backdrop {
+  animation: cajuBackdrop 0.7s ease forwards;
+}
+
+/* Clarão dourado/alaranjado quando o caju "estala" no centro. */
+.caju-flash {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 65vmin;
+  height: 65vmin;
+  transform: translate(-50%, -50%) scale(0.3);
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(255, 198, 52, 0.9) 0%,
+    rgba(255, 198, 52, 0.4) 38%,
+    rgba(255, 198, 52, 0) 70%
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+.festival-caju.spinning .caju-flash {
+  animation: cajuFlash 0.55s ease-out 0.35s forwards;
+}
+
+/* Caju que gira no centro. */
+.caju-spinner {
+  position: relative;
+  width: 38vmin;
+  max-width: 280px;
+  height: 38vmin;
+  max-height: 280px;
+  opacity: 0;
+  filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.5));
+}
+.caju-spinner svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.festival-caju.spinning .caju-spinner {
+  animation: cajuSpin 0.75s cubic-bezier(0.32, 0.18, 0.34, 1) forwards;
+}
+
+@keyframes cajuBackdrop {
+  0%   { opacity: 0; }
+  35%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes cajuFlash {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+  30%  { opacity: 0.9; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+}
+@keyframes cajuSpin {
+  0%   { opacity: 0; transform: scale(0.25) rotate(-90deg); }
+  25%  { opacity: 1; }
+  60%  { transform: scale(1.15) rotate(540deg); }
+  85%  { transform: scale(0.95) rotate(900deg); }
+  100% { opacity: 1; transform: scale(1) rotate(1080deg); }
 }
 
 /* ── RESPONSIVE ── */

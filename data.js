@@ -434,7 +434,7 @@ const FESTIVALS = {
     startDate: "2026-06-04T18:00:00",
     icon: CAJU_ICON,
     theme: "theme-forro-caju",
-    transition: "curtain",
+    transition: "caju",
     weeks: FORRO_CAJU_WEEKS,
   },
   "areia-branca": {
