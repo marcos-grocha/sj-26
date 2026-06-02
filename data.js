@@ -387,14 +387,14 @@ const AREIA_BRANCA_WEEKS = [
 
 // ── Festa dos Caminhoneiros (Itabaiana) ──
 const CAMINHONEIROS_ICON = `<svg class="truck-icon" viewBox="0 0 64 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <rect x="3" y="9" width="33" height="21" rx="2" fill="#7e3aa8"/>
-  <path d="M36 14 h11 l7 8 v8 H36 Z" fill="#9a52c4"/>
-  <path d="M39 16.5 h7 l4.2 5 H39 Z" fill="#ead6f6"/>
-  <rect x="3" y="30" width="51" height="3" rx="1" fill="#5a2780"/>
-  <circle cx="15" cy="34" r="5" fill="#241030"/>
-  <circle cx="15" cy="34" r="2" fill="#c79be0"/>
-  <circle cx="46" cy="34" r="5" fill="#241030"/>
-  <circle cx="46" cy="34" r="2" fill="#c79be0"/>
+  <rect x="3" y="9" width="33" height="21" rx="2" fill="#262626"/>
+  <path d="M36 14 h11 l7 8 v8 H36 Z" fill="#333333"/>
+  <path d="M39 16.5 h7 l4.2 5 H39 Z" fill="#9ec5ed"/>
+  <rect x="3" y="30" width="51" height="3" rx="1" fill="#0a0a0a"/>
+  <circle cx="15" cy="34" r="5" fill="#0d0d0d"/>
+  <circle cx="15" cy="34" r="2" fill="#c8c8c8"/>
+  <circle cx="46" cy="34" r="5" fill="#0d0d0d"/>
+  <circle cx="46" cy="34" r="2" fill="#c8c8c8"/>
 </svg>`;
 const CAMINHONEIROS_WEEKS = [];
 
@@ -454,7 +454,7 @@ const FESTIVALS = {
     startDate: "2026-06-06T18:00:00",
     icon: CAMINHONEIROS_ICON,
     theme: "theme-caminhoneiros",
-    transition: "curtain",
+    transition: "truck",
     weeks: CAMINHONEIROS_WEEKS,
   },
   "sao-pedro-capela": {
@@ -464,7 +464,7 @@ const FESTIVALS = {
     startDate: "2026-06-04T18:00:00",
     icon: CAPELA_ICON,
     theme: "theme-capela",
-    transition: "bonfire",
+    transition: "curtain",
     weeks: CAPELA_WEEKS,
   },
 };

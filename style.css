@@ -1375,6 +1375,7 @@ body.light-mode .theme-toggle::before {
   .orla-arch { transition-duration: 0.25s; transition-delay: 0s !important; }
   .stamp-backdrop, .stamp-flash, .stamp-shield { animation: none !important; }
   .caju-backdrop, .caju-flash, .caju-spinner { animation: none !important; }
+  .truck-backdrop, .truck-road, .truck-vehicle { animation: none !important; }
 }
 
 /* ── TRANSIÇÃO CARIMBO (São João de Areia Branca) ── */
@@ -1563,6 +1564,105 @@ body.light-mode .theme-toggle::before {
   60%  { transform: scale(1.15) rotate(540deg); }
   85%  { transform: scale(0.95) rotate(900deg); }
   100% { opacity: 1; transform: scale(1) rotate(1080deg); }
+}
+
+/* ── TRANSIÇÃO CAMINHÃO (Festa dos Caminhoneiros) ── */
+.festival-truck {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.festival-truck.passing,
+.festival-truck.fading {
+  pointer-events: all;
+  opacity: 1;
+}
+.festival-truck.fading {
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+}
+
+/* Fundo escuro arroxeado, evocando estrada à noite. */
+.truck-backdrop {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    #120820 0%,
+    #28133e 45%,
+    #4a1f6b 80%,
+    #1f0d33 100%
+  );
+  opacity: 0;
+}
+.festival-truck.passing .truck-backdrop {
+  animation: truckBackdrop 0.85s ease forwards;
+}
+
+/* Estrada com tracejado amarelo correndo. */
+.truck-road {
+  position: absolute;
+  top: 70%;
+  left: 0;
+  right: 0;
+  height: 5px;
+  display: flex;
+  gap: 6vw;
+  padding: 0 4vw;
+  opacity: 0;
+  filter: drop-shadow(0 0 6px rgba(244, 192, 37, 0.55));
+}
+.truck-road span {
+  flex: 1;
+  background: rgba(244, 192, 37, 0.85);
+  border-radius: 2px;
+}
+.festival-truck.passing .truck-road {
+  animation: truckRoadIn 0.85s ease forwards,
+             truckRoadDash 0.4s linear 0.18s infinite;
+}
+
+/* Caminhão atravessando a tela. */
+.truck-vehicle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 36vmin;
+  max-width: 360px;
+  transform: translate(calc(-50% - 80vw), -50%);
+  filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.55));
+}
+.truck-vehicle svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.festival-truck.passing .truck-vehicle {
+  animation: truckPass 0.85s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
+}
+
+@keyframes truckBackdrop {
+  0%   { opacity: 0; }
+  20%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes truckRoadIn {
+  0%   { opacity: 0; }
+  20%  { opacity: 0; }
+  35%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes truckRoadDash {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-12vw); }
+}
+@keyframes truckPass {
+  0%   { transform: translate(calc(-50% - 80vw), -50%); }
+  50%  { transform: translate(-50%, -50%); }
+  100% { transform: translate(calc(-50% + 80vw), -50%); }
 }
 
 /* ── RESPONSIVE ── */

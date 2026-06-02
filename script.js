@@ -509,11 +509,16 @@ const festivalCurtain = document.getElementById("festival-curtain");
 const festivalBonfire = document.getElementById("festival-bonfire");
 const festivalStamp = document.getElementById("festival-stamp");
 const festivalCaju = document.getElementById("festival-caju");
+const festivalTruck = document.getElementById("festival-truck");
 const bonfireSparks = festivalBonfire.querySelector(".bonfire-sparks");
 const curtainFlagsContainer = festivalCurtain.querySelector(".curtain-flags");
 const cajuSpinnerEl = festivalCaju && festivalCaju.querySelector(".caju-spinner");
 if (cajuSpinnerEl && typeof CAJU_ICON === "string") {
   cajuSpinnerEl.innerHTML = CAJU_ICON;
+}
+const truckVehicleEl = festivalTruck && festivalTruck.querySelector(".truck-vehicle");
+if (truckVehicleEl && typeof CAMINHONEIROS_ICON === "string") {
+  truckVehicleEl.innerHTML = CAMINHONEIROS_ICON;
 }
 
 const festivalBtns = {};
@@ -676,11 +681,28 @@ function runCajuTransition(swapFn) {
   }, 750);
 }
 
+function runTruckTransition(swapFn) {
+  festivalTruck.classList.add("passing");
+  // Swap acontece quando o caminhão está no centro (~50% da animação).
+  setTimeout(() => {
+    try { swapFn(); } catch (err) { console.error(err); }
+  }, 425);
+  setTimeout(() => {
+    festivalTruck.classList.remove("passing");
+    festivalTruck.classList.add("fading");
+    setTimeout(() => {
+      festivalTruck.classList.remove("fading");
+      switching = false;
+    }, 500);
+  }, 850);
+}
+
 const FESTIVAL_TRANSITIONS = {
   curtain: runCurtainTransition,
   bonfire: runBonfireTransition,
   stamp: runStampTransition,
   caju: runCajuTransition,
+  truck: runTruckTransition,
 };
 
 function switchFestival(targetId) {
