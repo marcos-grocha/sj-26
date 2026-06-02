@@ -1,8 +1,6 @@
 // Dados (ARRAIA_WEEKS, FORRO_CAJU_STAGES, FESTIVALS) em data.js
 
-const ACTIVE_FESTIVAL_KEY = "sj26_active_festival";
-let currentFestivalId = localStorage.getItem(ACTIVE_FESTIVAL_KEY) || "arraia-do-povo";
-if (!FESTIVALS[currentFestivalId]) currentFestivalId = "arraia-do-povo";
+let currentFestivalId = "arraia-do-povo";
 
 function getCurrentFestival() { return FESTIVALS[currentFestivalId]; }
 function getOtherFestivalsWithMatch(q) {
@@ -523,18 +521,9 @@ document.querySelectorAll('a[href*="instagram.com/marcosjrgm"]').forEach(link =>
 const THEME_MODE_KEY = "sj26_theme_mode";
 const themeToggle = document.getElementById("theme-toggle");
 
-const ICON_MOON = `<svg class="theme-toggle__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-</svg>`;
-const ICON_SUN = `<svg class="theme-toggle__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-  <circle cx="12" cy="12" r="4"/>
-  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
-</svg>`;
-
 function applyThemeMode(mode) {
   document.documentElement.classList.remove("pre-light");
   document.body.classList.toggle("light-mode", mode === "light");
-  themeToggle.innerHTML = mode === "light" ? ICON_SUN : ICON_MOON;
   themeToggle.setAttribute("aria-pressed", mode === "light" ? "true" : "false");
 }
 
@@ -555,8 +544,14 @@ themeToggle.addEventListener("keydown", e => {
 
 setTimeout(() => themeToggle.classList.add("visible"), 400);
 
-// ── Festival buttons (um por festival) ──
-const festivalButtonsContainer = document.getElementById("festival-buttons");
+// ── Festival buttons (um por festival, divididos em dois grupos) ──
+const FESTIVAL_GROUPS = [
+  { containerId: "festival-buttons-main",      ids: ["arraia-do-povo", "forro-caju"] },
+  { containerId: "festival-buttons-secondary", ids: ["areia-branca", "caminhoneiros-itabaiana", "sao-pedro-capela"] },
+];
+const festivalButtonsContainers = FESTIVAL_GROUPS
+  .map(g => document.getElementById(g.containerId))
+  .filter(Boolean);
 const festivalCurtain = document.getElementById("festival-curtain");
 const festivalBonfire = document.getElementById("festival-bonfire");
 const festivalStamp = document.getElementById("festival-stamp");
@@ -566,31 +561,35 @@ const curtainFlagsContainer = festivalCurtain.querySelector(".curtain-flags");
 const festivalBtns = {};
 
 function renderFestivalButtons() {
-  festivalButtonsContainer.innerHTML = "";
-  const ids = Object.keys(FESTIVALS);
+  FESTIVAL_GROUPS.forEach(group => {
+    const container = document.getElementById(group.containerId);
+    if (!container) return;
+    container.innerHTML = "";
 
-  ids.forEach((id, idx) => {
-    const f = FESTIVALS[id];
-    const btn = document.createElement("div");
-    btn.className = "festival-btn";
-    btn.dataset.festivalId = id;
-    btn.style.setProperty("--idx", idx);
-    btn.setAttribute("role", "button");
-    btn.setAttribute("tabindex", "0");
-    btn.setAttribute("aria-label", `Ir para ${f.name}`);
-    btn.title = f.name;
-    btn.innerHTML = f.icon;
+    group.ids.forEach((id, idx) => {
+      const f = FESTIVALS[id];
+      if (!f) return;
+      const btn = document.createElement("div");
+      btn.className = "festival-btn";
+      btn.dataset.festivalId = id;
+      btn.style.setProperty("--idx", idx);
+      btn.setAttribute("role", "button");
+      btn.setAttribute("tabindex", "0");
+      btn.setAttribute("aria-label", `Ir para ${f.name}`);
+      btn.title = f.name;
+      btn.innerHTML = f.icon;
 
-    btn.addEventListener("click", () => switchFestival(id));
-    btn.addEventListener("keydown", e => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        switchFestival(id);
-      }
+      btn.addEventListener("click", () => switchFestival(id));
+      btn.addEventListener("keydown", e => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          switchFestival(id);
+        }
+      });
+
+      container.appendChild(btn);
+      festivalBtns[id] = btn;
     });
-
-    festivalButtonsContainer.appendChild(btn);
-    festivalBtns[id] = btn;
   });
 }
 
@@ -720,7 +719,6 @@ function switchFestival(targetId) {
 
   const swap = () => {
     currentFestivalId = targetId;
-    localStorage.setItem(ACTIVE_FESTIVAL_KEY, currentFestivalId);
     applyFestivalToDOM();
     window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
   };
@@ -739,5 +737,5 @@ if (todayCard) {
 }
 
 setTimeout(() => {
-  festivalButtonsContainer.classList.add("visible");
+  festivalButtonsContainers.forEach(c => c.classList.add("visible"));
 }, 400);
