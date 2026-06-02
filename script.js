@@ -5,9 +5,10 @@ let currentFestivalId = localStorage.getItem(ACTIVE_FESTIVAL_KEY) || "arraia-do-
 if (!FESTIVALS[currentFestivalId]) currentFestivalId = "arraia-do-povo";
 
 function getCurrentFestival() { return FESTIVALS[currentFestivalId]; }
-function getOtherFestival() {
-  const ids = Object.keys(FESTIVALS);
-  return FESTIVALS[ids.find(id => id !== currentFestivalId)];
+function getOtherFestivalsWithMatch(q) {
+  return Object.values(FESTIVALS).filter(
+    f => f.id !== currentFestivalId && hasMatchInFestival(f, q)
+  );
 }
 
 // ── Render ──
@@ -16,16 +17,11 @@ const todayStr = today.toISOString().slice(0, 10);
 
 function dayNum(dateStr) { return parseInt(dateStr.split("-")[2]); }
 
-function formatDatePtBr(iso) {
-  const [y, m, d] = iso.split("T")[0].split("-");
-  return `${d}/${m}/${y}`;
-}
-
-function renderSkeleton(container, festival) {
+function renderSkeleton(container) {
   const wrap = document.createElement("div");
   wrap.className = "skeleton-wrap";
   wrap.innerHTML = `
-    <p class="skeleton-message">Programação em breve · começa em ${formatDatePtBr(festival.startDate)}</p>
+    <p class="skeleton-message">Meus tokens acabaram, me ajude a te ajudar, faça um pixzinho véi: 79999630944</p>
     ${Array.from({ length: 4 }).map(() => `
       <div class="day-card skeleton">
         <div class="day-date">
@@ -50,7 +46,7 @@ function renderSchedule() {
   container.innerHTML = "";
 
   if (!festival.weeks.length) {
-    renderSkeleton(container, festival);
+    renderSkeleton(container);
     return;
   }
 
@@ -185,22 +181,28 @@ function clearSearchState({ refocus = false } = {}) {
 }
 
 function renderSearchEmpty(container, q, originalQuery) {
-  const other = getOtherFestival();
-  const otherHasMatch = hasMatchInFestival(other, q);
+  const others = getOtherFestivalsWithMatch(q);
   const safeQuery = originalQuery.replace(/[<>&"']/g, c => ({
     "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&#39;"
   }[c]));
+
+  let hint;
+  if (others.length === 1) hint = `Mas tem resultado no ${others[0].name}.`;
+  else if (others.length > 1) hint = `Mas tem resultado em: ${others.map(f => f.name).join(", ")}.`;
+  else hint = "Tente outro nome ou confira a programação completa.";
+
+  const switchButtons = others
+    .map(f => `<button type="button" class="search-empty__btn primary" data-action="switch" data-festival="${f.id}">Ver no ${f.name}</button>`)
+    .join("");
 
   const empty = document.createElement("div");
   empty.className = "search-empty";
   empty.innerHTML = `
     <p class="search-empty__title">Nenhum artista encontrado para <strong>"${safeQuery}"</strong></p>
-    <p class="search-empty__hint">${otherHasMatch
-      ? `Mas tem resultado no ${other.name}.`
-      : "Tente outro nome ou confira a programação completa."}</p>
+    <p class="search-empty__hint">${hint}</p>
     <div class="search-empty__actions">
       <button type="button" class="search-empty__btn" data-action="clear">Limpar busca</button>
-      ${otherHasMatch ? `<button type="button" class="search-empty__btn primary" data-action="switch">Ver no ${other.name}</button>` : ""}
+      ${switchButtons}
     </div>
   `;
   container.appendChild(empty);
@@ -208,13 +210,12 @@ function renderSearchEmpty(container, q, originalQuery) {
   empty.querySelector('[data-action="clear"]').addEventListener("click", () => {
     clearSearchState({ refocus: true });
   });
-  const switchBtn = empty.querySelector('[data-action="switch"]');
-  if (switchBtn) {
-    switchBtn.addEventListener("click", () => {
+  empty.querySelectorAll('[data-action="switch"]').forEach(btn => {
+    btn.addEventListener("click", () => {
       pendingSearchAfterSwitch = searchInputEl.value;
-      switchFestival();
+      switchFestival(btn.dataset.festival);
     });
-  }
+  });
 }
 
 function applySearch() {
@@ -513,37 +514,6 @@ function trackInstagramClick() {
   fetch("https://api.counterapi.dev/v1/sj26/instagram/up", { keepalive: true }).catch(() => {});
 }
 
-// ── Botão do mapa do evento ──
-const mapButton = document.getElementById("map-button");
-const mapPopup = document.getElementById("map-popup");
-const mapPopupClose = document.getElementById("map-popup-close");
-
-mapButton.innerHTML = `<svg class="map-button__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-  <path d="M9 3 3 5.5v15L9 18l6 3 6-2.5v-15L15 6 9 3z"/>
-  <path d="M9 3v15"/>
-  <path d="M15 6v15"/>
-</svg>`;
-
-function showMapPopup() {
-  mapPopup.classList.remove("collapsing");
-  mapPopup.classList.add("visible");
-}
-function hideMapPopup() {
-  mapPopup.classList.remove("visible");
-  mapPopup.classList.add("collapsing");
-}
-
-mapButton.addEventListener("click", showMapPopup);
-mapButton.addEventListener("keydown", e => {
-  if (e.key === "Enter" || e.key === " ") {
-    e.preventDefault();
-    showMapPopup();
-  }
-});
-mapPopupClose.addEventListener("click", hideMapPopup);
-
-setTimeout(() => mapButton.classList.add("visible"), 400);
-
 // Todos os links <a> do Instagram (popup, header, rodapé)
 document.querySelectorAll('a[href*="instagram.com/marcosjrgm"]').forEach(link => {
   link.addEventListener("click", trackInstagramClick);
@@ -585,12 +555,50 @@ themeToggle.addEventListener("keydown", e => {
 
 setTimeout(() => themeToggle.classList.add("visible"), 400);
 
-// ── Festival toggle ──
-const festivalToggle = document.getElementById("festival-toggle");
+// ── Festival buttons (um por festival) ──
+const festivalButtonsContainer = document.getElementById("festival-buttons");
 const festivalCurtain = document.getElementById("festival-curtain");
 const festivalBonfire = document.getElementById("festival-bonfire");
+const festivalStamp = document.getElementById("festival-stamp");
 const bonfireSparks = festivalBonfire.querySelector(".bonfire-sparks");
 const curtainFlagsContainer = festivalCurtain.querySelector(".curtain-flags");
+
+const festivalBtns = {};
+
+function renderFestivalButtons() {
+  festivalButtonsContainer.innerHTML = "";
+  const ids = Object.keys(FESTIVALS);
+
+  ids.forEach((id, idx) => {
+    const f = FESTIVALS[id];
+    const btn = document.createElement("div");
+    btn.className = "festival-btn";
+    btn.dataset.festivalId = id;
+    btn.style.setProperty("--idx", idx);
+    btn.setAttribute("role", "button");
+    btn.setAttribute("tabindex", "0");
+    btn.setAttribute("aria-label", `Ir para ${f.name}`);
+    btn.title = f.name;
+    btn.innerHTML = f.icon;
+
+    btn.addEventListener("click", () => switchFestival(id));
+    btn.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        switchFestival(id);
+      }
+    });
+
+    festivalButtonsContainer.appendChild(btn);
+    festivalBtns[id] = btn;
+  });
+}
+
+function updateActiveFestivalButton() {
+  Object.entries(festivalBtns).forEach(([id, btn]) => {
+    btn.classList.toggle("is-active", id === currentFestivalId);
+  });
+}
 
 for (let i = 0; i < 18; i++) {
   const s = document.createElement("span");
@@ -611,14 +619,8 @@ for (let i = 0; i < CURTAIN_FLAG_COUNT; i++) {
   curtainFlagsContainer.appendChild(f);
 }
 
-const festivalPopup = document.getElementById("festival-popup");
-const festivalPopupName = document.getElementById("festival-popup-name");
-const festivalPopupClose = document.getElementById("festival-popup-close");
-const mapPopupName = document.getElementById("map-popup-name");
-
 function applyFestivalToDOM() {
   const festival = getCurrentFestival();
-  const other = getOtherFestival();
 
   document.body.classList.remove(...Object.values(FESTIVALS).map(f => f.theme));
   document.body.classList.add(festival.theme);
@@ -627,11 +629,7 @@ function applyFestivalToDOM() {
   festivalSubtitleEl.textContent = festival.subtitle;
   document.title = `${festival.name} — Programação`;
 
-  festivalToggle.innerHTML = other.icon;
-  festivalToggle.title = `Ir para ${other.name}`;
-  festivalToggle.setAttribute("aria-label", `Ir para ${other.name}`);
-  festivalPopupName.textContent = other.name;
-  mapPopupName.textContent = festival.name;
+  updateActiveFestivalButton();
 
   filterBarEl.classList.toggle("is-hidden", festival.weeks.length === 0);
 
@@ -696,111 +694,43 @@ function runBonfireTransition(swapFn) {
   }, 800);
 }
 
-function switchFestival() {
+function runStampTransition(swapFn) {
+  festivalStamp.classList.add("stamping");
+  setTimeout(() => {
+    try { swapFn(); } catch (err) { console.error(err); }
+    festivalStamp.classList.remove("stamping");
+    festivalStamp.classList.add("fading");
+    setTimeout(() => {
+      festivalStamp.classList.remove("fading");
+      switching = false;
+    }, 500);
+  }, 650);
+}
+
+const FESTIVAL_TRANSITIONS = {
+  curtain: runCurtainTransition,
+  bonfire: runBonfireTransition,
+  stamp: runStampTransition,
+};
+
+function switchFestival(targetId) {
   if (switching) return;
+  if (!targetId || !FESTIVALS[targetId] || targetId === currentFestivalId) return;
   switching = true;
 
-  const goingToForroCaju = currentFestivalId === "arraia-do-povo";
-
   const swap = () => {
-    currentFestivalId = getOtherFestival().id;
+    currentFestivalId = targetId;
     localStorage.setItem(ACTIVE_FESTIVAL_KEY, currentFestivalId);
     applyFestivalToDOM();
     window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
   };
 
-  if (goingToForroCaju) {
-    runCurtainTransition(swap);
-  } else {
-    runBonfireTransition(swap);
-  }
+  const runTransition = FESTIVAL_TRANSITIONS[FESTIVALS[targetId].transition] || runBonfireTransition;
+  runTransition(swap);
 }
 
-function hideFestivalPopup() {
-  festivalPopup.classList.remove("visible");
-  festivalPopup.classList.add("collapsing");
-}
-
-festivalToggle.addEventListener("click", () => {
-  hideFestivalPopup();
-  switchFestival();
-});
-festivalToggle.addEventListener("keydown", e => {
-  if (e.key === "Enter" || e.key === " ") {
-    e.preventDefault();
-    hideFestivalPopup();
-    switchFestival();
-  }
-});
-festivalPopupClose.addEventListener("click", hideFestivalPopup);
-
+renderFestivalButtons();
 applyFestivalToDOM();
-
-// ── São João de Areia Branca (modal bônus) ──
-const areiaButton = document.getElementById("areia-button");
-const areiaModal = document.getElementById("areia-modal");
-const areiaModalClose = document.getElementById("areia-modal-close");
-const areiaModalShield = document.getElementById("areia-modal-shield");
-const areiaModalDays = document.getElementById("areia-modal-days");
-
-if (areiaButton && typeof AREIA_BRANCA !== "undefined") {
-  areiaButton.innerHTML = AREIA_BRANCA.icon;
-  areiaModalShield.innerHTML = AREIA_BRANCA.icon;
-
-  function renderAreiaDays() {
-    areiaModalDays.innerHTML = AREIA_BRANCA.days.map(day => {
-      const [, , d] = day.date.split("-");
-      const rows = day.lineup.map(item => {
-        const isStar = day.highlights && day.highlights.includes(item.artist);
-        return `<li class="areia-lineup__row${isStar ? " is-star" : ""}">
-          <span class="areia-lineup__time">${item.time}</span>
-          <span class="areia-lineup__artist">${item.artist}</span>
-        </li>`;
-      }).join("");
-      return `
-        <article class="areia-day">
-          <div class="areia-day__head">
-            <span class="areia-day__num">${parseInt(d, 10)}</span>
-            <span class="areia-day__month">${day.month}</span>
-            <span class="areia-day__weekday">${day.weekday}</span>
-          </div>
-          <ul class="areia-lineup">${rows}</ul>
-        </article>
-      `;
-    }).join("");
-  }
-  renderAreiaDays();
-
-  function showAreiaModal() {
-    areiaModal.classList.add("visible");
-    areiaModal.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
-  }
-  function hideAreiaModal() {
-    areiaModal.classList.remove("visible");
-    areiaModal.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
-  }
-
-  areiaButton.addEventListener("click", showAreiaModal);
-  areiaButton.addEventListener("keydown", e => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      showAreiaModal();
-    }
-  });
-  areiaModalClose.addEventListener("click", hideAreiaModal);
-  areiaModal.addEventListener("click", e => {
-    if (e.target.dataset.action === "close") hideAreiaModal();
-  });
-  document.addEventListener("keydown", e => {
-    if (e.key === "Escape" && areiaModal.classList.contains("visible")) {
-      hideAreiaModal();
-    }
-  });
-
-  setTimeout(() => areiaButton.classList.add("visible"), 600);
-}
 
 // Auto-scroll to today
 const todayCard = document.querySelector(".day-card.today");
@@ -808,5 +738,6 @@ if (todayCard) {
   setTimeout(() => todayCard.scrollIntoView({ behavior: "smooth", block: "center" }), 300);
 }
 
-setTimeout(() => festivalToggle.classList.add("visible"), 400);
-setTimeout(() => festivalPopup.classList.add("visible"), 1000);
+setTimeout(() => {
+  festivalButtonsContainer.classList.add("visible");
+}, 400);

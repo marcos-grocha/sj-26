@@ -1,0 +1,18 @@
+# Claude Code (configs locais)
+.claude/
+
+# Dependências
+node_modules/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores / IDEs
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log

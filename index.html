@@ -65,43 +65,9 @@
   Desenvolvido por <a href="https://www.instagram.com/marcosjrgm/" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none;font-weight:600;">@marcosjrgm</a>
 </footer>
 
-<div id="map-button" class="map-button" role="button" tabindex="0" title="Mapa do evento" aria-label="Mapa do evento"></div>
-
-<div id="map-popup" class="map-popup" role="dialog" aria-label="Mapa do evento">
-  <button class="map-popup__close" id="map-popup-close" aria-label="Fechar">×</button>
-  <p class="map-popup__text">
-    Em breve: Mapa 3D do
-    <span class="map-popup__name" id="map-popup-name">evento</span>
-  </p>
-</div>
-
 <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Alternar tema claro/escuro" title="Alternar tema"></button>
 
-<div id="festival-toggle" class="festival-toggle" role="button" tabindex="0" aria-label="Alternar festa"></div>
-
-<div id="areia-button" class="areia-button" role="button" tabindex="0" title="São João de Areia Branca" aria-label="São João de Areia Branca · cidade vizinha"></div>
-
-<div id="areia-modal" class="areia-modal" role="dialog" aria-modal="true" aria-labelledby="areia-modal-title" aria-hidden="true">
-  <div class="areia-modal__backdrop" data-action="close"></div>
-  <div class="areia-modal__panel">
-    <button type="button" class="areia-modal__close" id="areia-modal-close" aria-label="Fechar">×</button>
-    <header class="areia-modal__header">
-      <div class="areia-modal__shield" id="areia-modal-shield" aria-hidden="true"></div>
-      <h2 id="areia-modal-title" class="areia-modal__title">São João de Areia Branca</h2>
-      <p class="areia-modal__subtitle">Onde o forró começa!</p>
-      <p class="areia-modal__tagline">Cidade vizinha · evento bônus</p>
-    </header>
-    <div class="areia-modal__days" id="areia-modal-days"></div>
-  </div>
-</div>
-
-<div id="festival-popup" class="festival-popup" role="dialog" aria-label="Alternar festa">
-  <button class="festival-popup__close" id="festival-popup-close" aria-label="Fechar">×</button>
-  <p class="festival-popup__text">
-    Confira também:
-    <span class="festival-popup__name" id="festival-popup-name">Forró Caju</span>!
-  </p>
-</div>
+<div id="festival-buttons" class="festival-buttons" role="group" aria-label="Selecionar festa"></div>
 
 <div id="festival-curtain" class="festival-curtain" aria-hidden="true">
   <div class="curtain-rope"></div>
@@ -144,6 +110,12 @@
     <span class="ember ember-3"></span>
   </div>
   <div class="bonfire-sparks"></div>
+</div>
+
+<div id="festival-stamp" class="festival-stamp" aria-hidden="true">
+  <div class="stamp-backdrop"></div>
+  <div class="stamp-flash"></div>
+  <img class="stamp-shield" src="assets/areia-branca-logo.png" alt="" aria-hidden="true" />
 </div>
 
 <script src="data.js"></script>
