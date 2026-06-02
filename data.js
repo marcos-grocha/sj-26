@@ -385,6 +385,36 @@ const AREIA_BRANCA_WEEKS = [
   }
 ];
 
+// ── Festa dos Caminhoneiros (Itabaiana) ──
+const CAMINHONEIROS_ICON = `<svg class="truck-icon" viewBox="0 0 64 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <rect x="3" y="9" width="33" height="21" rx="2" fill="#7e3aa8"/>
+  <path d="M36 14 h11 l7 8 v8 H36 Z" fill="#9a52c4"/>
+  <path d="M39 16.5 h7 l4.2 5 H39 Z" fill="#ead6f6"/>
+  <rect x="3" y="30" width="51" height="3" rx="1" fill="#5a2780"/>
+  <circle cx="15" cy="34" r="5" fill="#241030"/>
+  <circle cx="15" cy="34" r="2" fill="#c79be0"/>
+  <circle cx="46" cy="34" r="5" fill="#241030"/>
+  <circle cx="46" cy="34" r="2" fill="#c79be0"/>
+</svg>`;
+const CAMINHONEIROS_WEEKS = [];
+
+// ── São Pedro de Capela (Capela) ──
+const CAPELA_ICON = `<svg class="keys-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <g transform="translate(24 24) rotate(-24)">
+    <circle cx="0" cy="-13" r="5.5" fill="none" stroke="#0e8a9c" stroke-width="3"/>
+    <rect x="-1.5" y="-8" width="3" height="20" rx="1" fill="#0e8a9c"/>
+    <rect x="1.5" y="6" width="5.5" height="3" rx="1" fill="#0e8a9c"/>
+    <rect x="1.5" y="11" width="4" height="3" rx="1" fill="#0e8a9c"/>
+  </g>
+  <g transform="translate(24 24) rotate(24)">
+    <circle cx="0" cy="-13" r="5.5" fill="none" stroke="#0b7385" stroke-width="3"/>
+    <rect x="-1.5" y="-8" width="3" height="20" rx="1" fill="#0b7385"/>
+    <rect x="1.5" y="6" width="5.5" height="3" rx="1" fill="#0b7385"/>
+    <rect x="1.5" y="11" width="4" height="3" rx="1" fill="#0b7385"/>
+  </g>
+</svg>`;
+const CAPELA_WEEKS = [];
+
 // ── Festivais ──
 const FESTIVALS = {
   "arraia-do-povo": {
@@ -416,5 +446,25 @@ const FESTIVALS = {
     theme: "theme-areia-branca",
     transition: "stamp",
     weeks: AREIA_BRANCA_WEEKS,
+  },
+  "caminhoneiros-itabaiana": {
+    id: "caminhoneiros-itabaiana",
+    name: "Festa dos Caminhoneiros",
+    subtitle: "Tradição em Itabaiana · Cidade vizinha",
+    startDate: "2026-06-06T18:00:00",
+    icon: CAMINHONEIROS_ICON,
+    theme: "theme-caminhoneiros",
+    transition: "curtain",
+    weeks: CAMINHONEIROS_WEEKS,
+  },
+  "sao-pedro-capela": {
+    id: "sao-pedro-capela",
+    name: "São Pedro de Capela",
+    subtitle: "Barca de São Pedro · Cidade vizinha",
+    startDate: "2026-06-04T18:00:00",
+    icon: CAPELA_ICON,
+    theme: "theme-capela",
+    transition: "bonfire",
+    weeks: CAPELA_WEEKS,
   },
 };

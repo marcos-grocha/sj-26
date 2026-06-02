@@ -17,16 +17,11 @@ const todayStr = today.toISOString().slice(0, 10);
 
 function dayNum(dateStr) { return parseInt(dateStr.split("-")[2]); }
 
-function formatDatePtBr(iso) {
-  const [y, m, d] = iso.split("T")[0].split("-");
-  return `${d}/${m}/${y}`;
-}
-
-function renderSkeleton(container, festival) {
+function renderSkeleton(container) {
   const wrap = document.createElement("div");
   wrap.className = "skeleton-wrap";
   wrap.innerHTML = `
-    <p class="skeleton-message">Programação em breve · começa em ${formatDatePtBr(festival.startDate)}</p>
+    <p class="skeleton-message">Meus tokens acabaram, me ajude a te ajudar, faça um pixzinho véi: 79999630944</p>
     ${Array.from({ length: 4 }).map(() => `
       <div class="day-card skeleton">
         <div class="day-date">
@@ -51,7 +46,7 @@ function renderSchedule() {
   container.innerHTML = "";
 
   if (!festival.weeks.length) {
-    renderSkeleton(container, festival);
+    renderSkeleton(container);
     return;
   }
 

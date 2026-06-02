@@ -40,6 +40,18 @@ body.theme-areia-branca {
   --gold: #f4c025;
 }
 
+body.theme-caminhoneiros {
+  --accent: #7e3aa8;
+  --accent2: #5a2780;
+  --gold: #e8a020;
+}
+
+body.theme-capela {
+  --accent: #0e8a9c;
+  --accent2: #0a5f6b;
+  --gold: #e8a020;
+}
+
 /* Anti-FOUC: html.pre-light é aplicado pelo script inline no <head> antes do body parsear */
 html.pre-light body,
 body.light-mode {
@@ -67,6 +79,12 @@ body.light-mode.theme-forro-caju { --accent: #157046; }
 
 html.pre-light body.theme-areia-branca,
 body.light-mode.theme-areia-branca { --accent: #16306a; }
+
+html.pre-light body.theme-caminhoneiros,
+body.light-mode.theme-caminhoneiros { --accent: #6a2f90; }
+
+html.pre-light body.theme-capela,
+body.light-mode.theme-capela { --accent: #0b7385; }
 
 /* Tag dourada perde contraste sobre creme — escurece e reforça fundo */
 html.pre-light .artist-tag.star,
@@ -956,6 +974,16 @@ footer {
   height: 1.4rem;
   filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
   border-radius: 3px;
+}
+.truck-icon {
+  width: 2rem;
+  height: 1.4rem;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+}
+.keys-icon {
+  width: 1.85rem;
+  height: 1.85rem;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
 }
 .festival-btn .areia-logo-img {
   width: 2.05rem;
