@@ -399,19 +399,47 @@ const CAMINHONEIROS_ICON = `<svg class="truck-icon" viewBox="0 0 64 44" xmlns="h
 const CAMINHONEIROS_WEEKS = [];
 
 // ── São Pedro de Capela (Capela) ──
-const CAPELA_ICON = `<svg class="keys-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <g transform="translate(24 24) rotate(-24)">
-    <circle cx="0" cy="-13" r="5.5" fill="none" stroke="#0e8a9c" stroke-width="3"/>
-    <rect x="-1.5" y="-8" width="3" height="20" rx="1" fill="#0e8a9c"/>
-    <rect x="1.5" y="6" width="5.5" height="3" rx="1" fill="#0e8a9c"/>
-    <rect x="1.5" y="11" width="4" height="3" rx="1" fill="#0e8a9c"/>
-  </g>
-  <g transform="translate(24 24) rotate(24)">
-    <circle cx="0" cy="-13" r="5.5" fill="none" stroke="#0b7385" stroke-width="3"/>
-    <rect x="-1.5" y="-8" width="3" height="20" rx="1" fill="#0b7385"/>
-    <rect x="1.5" y="6" width="5.5" height="3" rx="1" fill="#0b7385"/>
-    <rect x="1.5" y="11" width="4" height="3" rx="1" fill="#0b7385"/>
-  </g>
+// Mastro inclinado emergindo da lama, com flâmula em ciano (cor do tema).
+const CAPELA_ICON = `<svg class="mastro-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="mastroWood" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"  stop-color="#a87045"/>
+      <stop offset="55%" stop-color="#7a4920"/>
+      <stop offset="100%" stop-color="#3f240b"/>
+    </linearGradient>
+    <radialGradient id="mastroMud" cx="50%" cy="50%" r="55%">
+      <stop offset="0%"  stop-color="#7a4d22"/>
+      <stop offset="80%" stop-color="#3d2710"/>
+      <stop offset="100%" stop-color="#241407"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Respingos de lama ao redor da poça -->
+  <circle cx="6"  cy="36" r="1.5" fill="#3d2710"/>
+  <circle cx="4"  cy="40" r="1.1" fill="#5a3a18"/>
+  <circle cx="42" cy="36" r="1.4" fill="#3d2710"/>
+  <circle cx="44" cy="40" r="1"   fill="#5a3a18"/>
+  <circle cx="11" cy="44" r="0.9" fill="#3d2710"/>
+  <circle cx="37" cy="44" r="1"   fill="#3d2710"/>
+
+  <!-- Poça de lama -->
+  <ellipse cx="24" cy="41" rx="17" ry="4.2" fill="url(#mastroMud)"/>
+  <ellipse cx="24" cy="39.8" rx="11" ry="1.8" fill="#6b4423" opacity="0.85"/>
+  <ellipse cx="20" cy="40" rx="3" ry="0.7" fill="#a87045" opacity="0.4"/>
+
+  <!-- Mastro de madeira, levemente inclinado -->
+  <path d="M21 41 L18.5 6 L22.5 5 L25 40.5 Z" fill="url(#mastroWood)"/>
+  <line x1="21.5" y1="38" x2="20" y2="8" stroke="#2d1908" stroke-width="0.55" opacity="0.6"/>
+  <line x1="23.5" y1="38" x2="22" y2="8" stroke="#cc8a52" stroke-width="0.4"  opacity="0.55"/>
+
+  <!-- Esfera dourada no topo do mastro -->
+  <circle cx="20.5" cy="4" r="2.4" fill="#e8a020"/>
+  <circle cx="19.8" cy="3.3" r="0.9" fill="#fff3c0"/>
+
+  <!-- Flâmula em ciano (cor do tema São Pedro) -->
+  <path d="M22 5 L36 7.5 L33 11 L22.5 10.8 Z" fill="#0e8a9c"/>
+  <path d="M22 5 L36 7.5" stroke="#0a5f6b" stroke-width="0.5"/>
+  <path d="M28 8.4 L31 9" stroke="#0a5f6b" stroke-width="0.3" opacity="0.7"/>
 </svg>`;
 const CAPELA_WEEKS = [];
 
