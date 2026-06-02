@@ -420,7 +420,7 @@ const FESTIVALS = {
   "arraia-do-povo": {
     id: "arraia-do-povo",
     name: "Arraiá do Povo",
-    subtitle: "Aracaju · Programação Oficial",
+    subtitle: "Aracaju · SE",
     startDate: "2026-05-29T18:00:00",
     icon: ARRAIA_ICON,
     theme: "theme-arraia",
@@ -430,7 +430,7 @@ const FESTIVALS = {
   "forro-caju": {
     id: "forro-caju",
     name: "Forró Caju",
-    subtitle: "Aracaju · Programação Oficial",
+    subtitle: "Aracaju · SE",
     startDate: "2026-06-04T18:00:00",
     icon: CAJU_ICON,
     theme: "theme-forro-caju",
@@ -439,8 +439,8 @@ const FESTIVALS = {
   },
   "areia-branca": {
     id: "areia-branca",
-    name: "São João de Areia Branca",
-    subtitle: "Onde o forró começa! · Cidade vizinha",
+    name: "Abertura do São João",
+    subtitle: "Areia Branca · SE",
     startDate: "2026-05-29T20:00:00",
     icon: AREIA_BRANCA_ICON,
     theme: "theme-areia-branca",
@@ -450,7 +450,7 @@ const FESTIVALS = {
   "caminhoneiros-itabaiana": {
     id: "caminhoneiros-itabaiana",
     name: "Festa dos Caminhoneiros",
-    subtitle: "Tradição em Itabaiana · Cidade vizinha",
+    subtitle: "Itabaiana · SE",
     startDate: "2026-06-06T18:00:00",
     icon: CAMINHONEIROS_ICON,
     theme: "theme-caminhoneiros",
@@ -459,8 +459,8 @@ const FESTIVALS = {
   },
   "sao-pedro-capela": {
     id: "sao-pedro-capela",
-    name: "São Pedro de Capela",
-    subtitle: "Barca de São Pedro · Cidade vizinha",
+    name: "São Pedro · Mastro",
+    subtitle: "Capela · SE",
     startDate: "2026-06-04T18:00:00",
     icon: CAPELA_ICON,
     theme: "theme-capela",

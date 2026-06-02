@@ -320,51 +320,6 @@ searchInputEl.addEventListener("keydown", e => {
   }
 });
 
-// ── Countdown ──
-const pad = n => String(n).padStart(2, "0");
-
-const COUNTDOWN_BLOCKS_HTML = `
-    <div class="countdown-block"><span class="countdown-num" id="cd-d">--</span><span class="countdown-label">dias</span></div>
-    <span class="countdown-sep">:</span>
-    <div class="countdown-block"><span class="countdown-num" id="cd-h">--</span><span class="countdown-label">horas</span></div>
-    <span class="countdown-sep">:</span>
-    <div class="countdown-block"><span class="countdown-num" id="cd-m">--</span><span class="countdown-label">min</span></div>
-    <span class="countdown-sep">:</span>
-    <div class="countdown-block"><span class="countdown-num" id="cd-s">--</span><span class="countdown-label">seg</span></div>`;
-
-function updateCountdown() {
-  const festival = getCurrentFestival();
-  const now = new Date();
-  const diff = new Date(festival.startDate) - now;
-  const cdEl = document.getElementById("countdown");
-
-  if (diff <= 0) {
-    cdEl.innerHTML =
-      `<p style="color:var(--accent);font-weight:700;font-size:1rem;padding:0.5rem 0">O ${festival.name} começou! 🎉</p>`;
-    document.getElementById("countdown-compact").textContent = "Acontecendo agora!";
-    return;
-  }
-
-  // Restaura o markup dos números caso tenha sido substituído pela mensagem "começou!"
-  // (acontece quando o festival anterior já tinha zerado e o usuário trocou para um
-  // que ainda não começou).
-  if (!document.getElementById("cd-d")) {
-    cdEl.innerHTML = COUNTDOWN_BLOCKS_HTML;
-  }
-
-  const d = Math.floor(diff / 86400000);
-  const h = Math.floor((diff % 86400000) / 3600000);
-  const m = Math.floor((diff % 3600000) / 60000);
-  const s = Math.floor((diff % 60000) / 1000);
-
-  document.getElementById("cd-d").textContent = pad(d);
-  document.getElementById("cd-h").textContent = pad(h);
-  document.getElementById("cd-m").textContent = pad(m);
-  document.getElementById("cd-s").textContent = pad(s);
-  document.getElementById("countdown-compact").textContent =
-    `${pad(d)}d ${pad(h)}h ${pad(m)}m ${pad(s)}s`;
-}
-
 // ── Progress bar ──
 progressBarEl = document.createElement("div");
 progressBarEl.id = "scroll-progress";
@@ -398,8 +353,6 @@ const sectionHighlightObserver = new IntersectionObserver(entries => {
 function observeCurrentWeekSections() {
   document.querySelectorAll(".week-section").forEach(s => sectionHighlightObserver.observe(s));
 }
-
-setInterval(updateCountdown, 1000);
 
 // ── Bandeirinhas ──
 const flagsContainer = document.getElementById("header-flags");
@@ -636,7 +589,6 @@ function applyFestivalToDOM() {
   renderSchedule();
   observeCurrentWeekSections();
   applyRevealToCurrentDOM();
-  updateCountdown();
 
   const allBtn = weekBtns["all"];
   if (allBtn) {

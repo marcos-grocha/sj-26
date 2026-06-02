@@ -307,24 +307,33 @@ header.scrolled h1 {
   filter: none;
 }
 
-/* ── COMPACT COUNTDOWN ── */
-.countdown-compact {
-  font-size: 0.8rem;
+/* ── HEADER INSTAGRAM (aparece quando o header colapsa) ── */
+.header-instagram {
+  font-size: 0.85rem;
   font-weight: 600;
   color: var(--accent);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.03em;
+  text-decoration: none;
+  letter-spacing: 0.02em;
   white-space: nowrap;
   flex-shrink: 0;
   overflow: hidden;
   max-width: 0;
   opacity: 0;
-  transition: opacity 0.3s, max-width 0.45s cubic-bezier(0.4,0,0.2,1);
+  pointer-events: none;
+  transition: opacity 0.3s, max-width 0.45s cubic-bezier(0.4,0,0.2,1), color 0.3s;
 }
 
-header.scrolled .countdown-compact {
+header.scrolled .header-instagram {
   opacity: 1;
   max-width: 240px;
+  pointer-events: auto;
+}
+
+.header-instagram:hover { color: var(--gold); }
+.header-instagram:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
 header p.subtitle {
@@ -373,56 +382,6 @@ header.footer-visible .header-credit {
   max-height: 0;
   opacity: 0;
   margin-top: 0;
-}
-
-/* ── COUNTDOWN ── */
-.countdown-wrap {
-  display: flex;
-  justify-content: center;
-  gap: 1.2rem;
-  margin-top: 0.9rem;
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
-  max-height: 6rem;
-  opacity: 1;
-  transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.3s, margin 0.45s;
-}
-
-header.scrolled .countdown-wrap {
-  max-height: 0;
-  opacity: 0;
-  margin-top: 0;
-}
-
-.countdown-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.countdown-num {
-  font-size: clamp(1.6rem, 4vw, 2.2rem);
-  font-weight: 700;
-  color: var(--accent);
-  min-width: 2.8ch;
-  text-align: center;
-}
-
-.countdown-label {
-  font-size: 0.65rem;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-top: 2px;
-}
-
-.countdown-sep {
-  font-size: 1.8rem;
-  color: var(--border);
-  align-self: flex-start;
-  padding-top: 0.15rem;
-  font-weight: 300;
 }
 
 /* ── WEEK FILTER ── */
