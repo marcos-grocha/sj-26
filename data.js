@@ -441,7 +441,67 @@ const CAPELA_ICON = `<svg class="mastro-icon" viewBox="0 0 48 48" xmlns="http://
   <path d="M22 5 L36 7.5" stroke="#0a5f6b" stroke-width="0.5"/>
   <path d="M28 8.4 L31 9" stroke="#0a5f6b" stroke-width="0.3" opacity="0.7"/>
 </svg>`;
-const CAPELA_WEEKS = [];
+const CAPELA_WEEKS = [
+  {
+    id: 1,
+    title: "Semana 1 · Final de Maio",
+    filterLabel: "Final de Maio",
+    days: [
+      { date: "2026-05-31", weekday: "Dom", month: "Maio", special: "Sarandaia",
+        artists: ["Solange Almeida", "Danielzinho Jr."],
+        highlights: ["Solange Almeida"] },
+    ]
+  },
+  {
+    id: 2,
+    title: "Semana 2 · Início de Junho",
+    filterLabel: "Início de Junho",
+    days: [
+      { date: "2026-06-04", weekday: "Qui", month: "Jun", special: "Corpus Christi · Marcação do Mastro",
+        artists: ["Tarcísio do Acordeon", "Banana Nativa", "Tonny Reis"],
+        highlights: ["Tarcísio do Acordeon"] },
+    ]
+  },
+  {
+    id: 3,
+    title: "Semana 3 · Dia dos Namorados & Santo Antônio",
+    filterLabel: "Namorados & St. Antônio",
+    days: [
+      { date: "2026-06-13", weekday: "Sáb", month: "Jun", special: "Santo Antônio · Escolha da Rainha",
+        artists: ["Transmissão Jogo do Brasil", "Jeanny Lins", "Kaio Vinny", "Alan Vaqueiro", "Trio Pé de Serra", "Meteoro da Paixão"],
+        highlights: [],
+        worldcupHighlights: ["Transmissão Jogo do Brasil"] },
+    ]
+  },
+  {
+    id: 4,
+    title: "Semana 4 · Reta Final",
+    filterLabel: "Reta Final",
+    days: [
+      { date: "2026-06-21", weekday: "Dom", month: "Jun", special: "Cavalgada",
+        artists: ["Saga do Vaqueiro", "Arthur e Alan Cid", "Abraão Vaqueiro"],
+        highlights: [] },
+    ]
+  },
+  {
+    id: 5,
+    title: "Semana 5 · São João & São Pedro",
+    filterLabel: "São João & São Pedro",
+    days: [
+      { date: "2026-06-26", weekday: "Sex", month: "Jun", special: null,
+        artists: ["Bell Marques", "Zé Vaqueiro", "Forrozão Baby Som", "Leonne o Nobre", "Raulzinho do Acordeon"],
+        highlights: ["Bell Marques", "Zé Vaqueiro"],
+        secondStage: { label: "Largo da Rodoviária", artists: ["Ittauan", "Matheusinho Melo", "Tales Play"] } },
+      { date: "2026-06-27", weekday: "Sáb", month: "Jun", special: null,
+        artists: ["Leonardo", "Alcymar Monteiro", "Henry Freitas", "Devinho Novaes", "Correia dos 8 Baixos"],
+        highlights: ["Leonardo", "Alcymar Monteiro", "Henry Freitas", "Devinho Novaes"],
+        secondStage: { label: "Largo da Rodoviária", artists: ["Frank Love", "Fernandinha"] } },
+      { date: "2026-06-28", weekday: "Dom", month: "Jun", special: "Cortejo do Mastro",
+        artists: ["Xand Avião", "Seeway"],
+        highlights: ["Xand Avião"] },
+    ]
+  }
+];
 
 // ── Festivais ──
 const FESTIVALS = {

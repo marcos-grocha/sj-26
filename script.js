@@ -87,6 +87,13 @@ function renderSchedule() {
             <span class="palco360-label">Palco 360°</span>
             <span class="palco360-artist" data-artist="${day.p360.replace(/"/g, '&quot;')}">${day.p360}</span>
           </div>` : ""}
+          ${day.secondStage ? `
+          <div class="palco360">
+            <span class="palco360-label">${day.secondStage.label}</span>
+            ${day.secondStage.artists.map(a =>
+              `<span class="palco360-artist" data-artist="${a.replace(/"/g, '&quot;')}">${a}</span>`
+            ).join('<span class="palco360-sep" aria-hidden="true">·</span>')}
+          </div>` : ""}
           ${day.location ? `
           <div class="day-location">
             <span class="day-location__pin" aria-hidden="true">📍</span>
@@ -160,6 +167,7 @@ function dayMatchesQuery(day, q) {
   if (!q) return true;
   if (day.artists && day.artists.some(a => normalizeText(a).includes(q))) return true;
   if (day.p360 && normalizeText(day.p360).includes(q)) return true;
+  if (day.secondStage && day.secondStage.artists.some(a => normalizeText(a).includes(q))) return true;
   if (day.location && normalizeText(day.location).includes(q)) return true;
   return false;
 }
@@ -251,8 +259,9 @@ function applySearch() {
       card.querySelectorAll(".artist-tag[data-artist]").forEach(tag => {
         if (normalizeText(tag.dataset.artist).includes(q)) tag.classList.add("search-match");
       });
-      const p360El = card.querySelector(".palco360-artist[data-artist]");
-      if (p360El && normalizeText(p360El.dataset.artist).includes(q)) p360El.classList.add("search-match");
+      card.querySelectorAll(".palco360-artist[data-artist]").forEach(el => {
+        if (normalizeText(el.dataset.artist).includes(q)) el.classList.add("search-match");
+      });
       const locEl = card.querySelector(".day-location__text[data-location]");
       if (locEl && normalizeText(locEl.dataset.location).includes(q)) locEl.classList.add("search-match");
     });
