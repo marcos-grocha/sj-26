@@ -396,7 +396,71 @@ const CAMINHONEIROS_ICON = `<svg class="truck-icon" viewBox="0 0 64 44" xmlns="h
   <circle cx="46" cy="34" r="5" fill="#0d0d0d"/>
   <circle cx="46" cy="34" r="2" fill="#c8c8c8"/>
 </svg>`;
-const CAMINHONEIROS_WEEKS = [];
+const CAMINHONEIROS_WEEKS = [
+  {
+    id: 1,
+    title: "Semana 1 · Final de Maio · sem atrações",
+    filterLabel: "Final de Maio",
+    days: []
+  },
+  {
+    id: 2,
+    title: "Semana 2 · Início de Junho",
+    filterLabel: "Início de Junho",
+    days: [
+      { date: "2026-06-06", weekday: "Sáb", month: "Jun", special: "Abertura",
+        artists: ["Tatua o Mensageiro do Forró", "Janio Linhares e Banda", "John Alysson", "Vanicleia Silva", "Jeanny Lins", "Carlos Greg", "Marquinhos dos Paredões", "Gileno Xavier", "Davi e Matheus", "Flávio Farias"],
+        highlights: [],
+        location: "Praça de Eventos",
+        secondStage: { label: "Quermesse · Praça Fausto Cardoso", artists: ["Forró Brasil", "Alex Santos o Safadinho"] } },
+      { date: "2026-06-07", weekday: "Dom", month: "Jun", special: null,
+        artists: ["Jadson Lisboa", "Edy Fonseca", "Rodriguinho do Forró", "Discarada", "Sandrinha Ravely", "Jhony Fraga", "Jamanta Show", "Diones Costa"],
+        highlights: [],
+        location: "Praça de Eventos",
+        secondStage: { label: "Carreata Mirim", artists: ["Flávio Costa", "Ricardo Mart"] } },
+    ]
+  },
+  {
+    id: 3,
+    title: "Semana 3 · Dia dos Namorados & Santo Antônio",
+    filterLabel: "Namorados & St. Antônio",
+    days: [
+      { date: "2026-06-09", weekday: "Ter", month: "Jun", special: "Abertura da Feira",
+        artists: ["Festival de Quadrilhas Juninas"],
+        highlights: [],
+        location: "Arena Peixoto" },
+      { date: "2026-06-10", weekday: "Qua", month: "Jun", special: null,
+        artists: ["Léo Lopes", "Aline Souza", "Zé Elias Cantor", "Gusttavo Lima", "Danielzinho Jr.", "Mikael Santos"],
+        highlights: ["Gusttavo Lima", "Mikael Santos"],
+        location: "Praça de Eventos" },
+      { date: "2026-06-11", weekday: "Qui", month: "Jun", special: null,
+        artists: ["Felipe Mariano", "Juninho O Original", "Lairton e Seus Teclados", "Nattan", "Zé Vaqueiro", "Henry Freitas"],
+        highlights: ["Nattan", "Zé Vaqueiro", "Henry Freitas"],
+        location: "Praça de Eventos" },
+      { date: "2026-06-12", weekday: "Sex", month: "Jun", special: "Dia dos Namorados · Alvorada",
+        artists: ["Reinan Santos", "Tatah Santana", "Silvânia e Berg", "Wesley Safadão", "X1 do Brega", "Natanzinho Lima"],
+        highlights: ["Wesley Safadão", "Natanzinho Lima"],
+        location: "Praça Etelvino Mendonça" },
+      { date: "2026-06-13", weekday: "Sáb", month: "Jun", special: "Santo Antônio",
+        artists: ["Transmissão Jogo do Brasil", "Thiago Brado"],
+        highlights: [],
+        worldcupHighlights: ["Transmissão Jogo do Brasil"],
+        location: "Praça Fausto Cardoso" },
+    ]
+  },
+  {
+    id: 4,
+    title: "Semana 4 · Reta Final · sem atrações",
+    filterLabel: "Reta Final",
+    days: []
+  },
+  {
+    id: 5,
+    title: "Semana 5 · São João & São Pedro · sem atrações",
+    filterLabel: "São João & São Pedro",
+    days: []
+  }
+];
 
 // ── São Pedro de Capela (Capela) ──
 // Mastro inclinado emergindo da lama, com flâmula em ciano (cor do tema).
