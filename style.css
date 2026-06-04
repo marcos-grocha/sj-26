@@ -757,8 +757,14 @@ main {
 .palco360 {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.4rem;
   margin-top: 0.3rem;
+}
+
+.palco360-sep {
+  color: var(--muted);
+  font-size: 0.7rem;
 }
 
 .palco360-label {
