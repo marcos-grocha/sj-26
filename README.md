@@ -30,6 +30,12 @@ npx http-server . -p 5173
 ## Autor
 Desenvolvido por [Marcos Guimarães Rocha](https://www.linkedin.com/in/marcos-grocha/).
 
+<img width="1900" height="912" alt="image" src="https://github.com/user-attachments/assets/e3c0a6b4-67ba-42af-bd3c-719f53025faa" />
+
+<img width="1901" height="906" alt="image" src="https://github.com/user-attachments/assets/8599a3a3-078f-4d7f-ba86-dd5894d93c74" />
+
+---
+
 <img width="1900" height="919" alt="image" src="https://github.com/user-attachments/assets/75d1c56d-d1c6-4554-896a-229140a99e54" />
 
 <img width="1897" height="917" alt="image" src="https://github.com/user-attachments/assets/3cc319fd-1eb6-4c5e-bde8-bcfe2a90757b" />
